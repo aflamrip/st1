@@ -12,32 +12,25 @@ const { label, title, thumbnail, href, year, info } = Astro.props;
 ---
 
 <a href={href} class="latest-card group">
-  <div class="relative overflow-hidden rounded-lg h-[280px] md:h-[380px]">
+  <div class="relative overflow-hidden rounded-xl bg-gray-800">
     <img
       src={thumbnail}
       alt={title}
-      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+      class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300"
       loading="lazy"
-      width="350"
-      height="380"
+      width="250"
+      height="200"
     />
-    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-
-    <div class="absolute top-4 right-4">
-      <span class="px-3 py-1 bg-primary-500 text-white text-xs font-semibold rounded-full shadow-lg">
+    <div class="absolute top-2 right-2">
+      <span class="px-2 py-1 bg-primary-500 text-white text-xs font-semibold rounded-md">
         {label}
       </span>
     </div>
-
-    <div class="absolute bottom-0 left-0 right-0 p-6">
-      <h3 class="text-white font-bold text-xl md:text-2xl mb-2 line-clamp-2">{title}</h3>
-      <div class="flex items-center gap-3 text-gray-300 text-sm">
+    <div class="p-4">
+      <h3 class="text-white font-semibold text-sm mb-1 line-clamp-2">{title}</h3>
+      <div class="flex items-center gap-2 text-gray-400 text-xs">
         {year && <span>{year}</span>}
         {info && <span>• {info}</span>}
-      </div>
-      <div class="mt-4 flex items-center gap-2 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-        <span class="i-carbon-play-filled text-2xl"></span>
-        <span class="font-medium">شاهد الآن</span>
       </div>
     </div>
   </div>
@@ -46,11 +39,14 @@ const { label, title, thumbnail, href, year, info } = Astro.props;
 <style>
   .latest-card {
     display: block;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    min-width: 220px;
+    max-width: 250px;
   }
 
   .latest-card:hover {
     transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
   }
 
   .line-clamp-2 {
@@ -58,5 +54,12 @@ const { label, title, thumbnail, href, year, info } = Astro.props;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  @media (max-width: 640px) {
+    .latest-card {
+      min-width: 180px;
+      max-width: 200px;
+    }
   }
 </style>

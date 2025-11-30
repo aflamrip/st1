@@ -22,8 +22,8 @@ const { title, description = 'Watch movies, shows and anime', dir = 'rtl' } = As
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   </head>
-  <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-    <header class="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+  <body class="bg-gray-950 text-gray-100">
+    <header class="bg-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-800">
       <nav class="container-custom py-4">
         <div class="flex items-center justify-between">
           <a href="/" class="text-2xl font-bold text-primary-500">
@@ -31,15 +31,12 @@ const { title, description = 'Watch movies, shows and anime', dir = 'rtl' } = As
           </a>
 
           <div class="flex items-center gap-6">
-            <a href="/movies" class="hover:text-primary-500 transition-colors">أفلام</a>
-            <a href="/shows" class="hover:text-primary-500 transition-colors">مسلسلات</a>
-            <a href="/anime" class="hover:text-primary-500 transition-colors">أنمي</a>
-            <a href="/search" class="hover:text-primary-500 transition-colors">
+            <a href="/movies" class="hover:text-primary-500 transition-colors text-gray-300">أفلام</a>
+            <a href="/shows" class="hover:text-primary-500 transition-colors text-gray-300">مسلسلات</a>
+            <a href="/anime" class="hover:text-primary-500 transition-colors text-gray-300">أنمي</a>
+            <a href="/search" class="hover:text-primary-500 transition-colors text-gray-300">
               <span class="i-carbon-search text-xl"></span>
             </a>
-            <button id="theme-toggle" class="hover:text-primary-500 transition-colors" aria-label="Toggle dark mode">
-              <span id="theme-icon" class="i-carbon-sun text-xl"></span>
-            </button>
           </div>
         </div>
       </nav>
@@ -49,31 +46,31 @@ const { title, description = 'Watch movies, shows and anime', dir = 'rtl' } = As
       <slot />
     </main>
 
-    <footer class="bg-white dark:bg-gray-900 mt-20 py-12 border-t border-gray-200 dark:border-gray-800">
+    <footer class="bg-gray-900 mt-20 py-12 border-t border-gray-800">
       <div class="container-custom">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 class="text-xl font-bold mb-4">Stream</h3>
-            <p class="text-gray-600 dark:text-gray-400">
+            <p class="text-gray-400">
               منصة مشاهدة الأفلام والمسلسلات والأنمي
             </p>
           </div>
           <div>
             <h3 class="text-lg font-semibold mb-4">روابط سريعة</h3>
             <ul class="space-y-2">
-              <li><a href="/movies" class="text-gray-600 dark:text-gray-400 hover:text-primary-600">أفلام</a></li>
-              <li><a href="/shows" class="text-gray-600 dark:text-gray-400 hover:text-primary-600">مسلسلات</a></li>
-              <li><a href="/anime" class="text-gray-600 dark:text-gray-400 hover:text-primary-600">أنمي</a></li>
+              <li><a href="/movies" class="text-gray-400 hover:text-primary-500">أفلام</a></li>
+              <li><a href="/shows" class="text-gray-400 hover:text-primary-500">مسلسلات</a></li>
+              <li><a href="/anime" class="text-gray-400 hover:text-primary-500">أنمي</a></li>
             </ul>
           </div>
           <div>
             <h3 class="text-lg font-semibold mb-4">تواصل معنا</h3>
-            <p class="text-gray-600 dark:text-gray-400">
+            <p class="text-gray-400">
               info@example.com
             </p>
           </div>
         </div>
-        <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-gray-600 dark:text-gray-400">
+        <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
           <p>&copy; 2025 Stream. جميع الحقوق محفوظة.</p>
         </div>
       </div>
@@ -92,46 +89,11 @@ const { title, description = 'Watch movies, shows and anime', dir = 'rtl' } = As
         overflow-x: hidden;
       }
 
-      html.dark {
+      html {
         color-scheme: dark;
       }
     </style>
 
-    <script>
-      const themeToggle = document.getElementById('theme-toggle');
-      const themeIcon = document.getElementById('theme-icon');
-      const html = document.documentElement;
-
-      const getTheme = () => {
-        if (localStorage.getItem('theme')) {
-          return localStorage.getItem('theme');
-        }
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      };
-
-      const setTheme = (theme) => {
-        if (theme === 'dark') {
-          html.classList.add('dark');
-          if (themeIcon) {
-            themeIcon.className = 'i-carbon-moon text-xl';
-          }
-        } else {
-          html.classList.remove('dark');
-          if (themeIcon) {
-            themeIcon.className = 'i-carbon-sun text-xl';
-          }
-        }
-        localStorage.setItem('theme', theme);
-      };
-
-      const initialTheme = getTheme();
-      setTheme(initialTheme);
-
-      themeToggle?.addEventListener('click', () => {
-        const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
-        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-      });
-    </script>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
   </body>
