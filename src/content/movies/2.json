@@ -1,13 +1,8 @@
 {
-  "id": 2,
   "title": "City Lights",
-  "year": 2024,
-  "thumbnail": "/uploads/eFabSXu.jpg",
   "description": "دراما رومانسية تدور أحداثها في قلب المدينة الكبيرة، حيث تتقاطع حيوات أشخاص مختلفين في قصة عاطفية مؤثرة.",
+  "thumbnail": "/uploads/eFabSXu.jpg",
   "tags": "دراما, رومانسي, حضري",
-  "draft": false,
-  "video": {
-    "source_type": "embed",
-    "source": "https://ma3ak.top/videos/embed/itVw1f8zHZNgBR3g4SKK25"
-  }
+  "embedUrl": "https://ma3ak.top/videos/embed/itVw1f8zHZNgBR3g4SKK25",
+  "featured": false
 }
