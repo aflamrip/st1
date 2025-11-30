@@ -12,12 +12,14 @@ const { label, title, thumbnail, href, year, info } = Astro.props;
 ---
 
 <a href={href} class="latest-card group">
-  <div class="relative overflow-hidden rounded-lg h-[300px] md:h-[400px]">
+  <div class="relative overflow-hidden rounded-lg h-[280px] md:h-[380px]">
     <img
       src={thumbnail}
       alt={title}
       class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
       loading="lazy"
+      width="350"
+      height="380"
     />
     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
 

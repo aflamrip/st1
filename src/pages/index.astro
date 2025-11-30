@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Slider from '../components/Slider.astro';
+import AutoSlider from '../components/AutoSlider.astro';
 import MovieCard from '../components/MovieCard.astro';
 import ShowCard from '../components/ShowCard.astro';
 import EpisodeCard from '../components/EpisodeCard.astro';
@@ -24,75 +25,67 @@ const latestAnimeEpisode = allAnimeEpisodes[0];
 ---
 
 <Layout title="Stream - منصة مشاهدة الأفلام والمسلسلات">
-  <section class="hero-latest py-12 bg-gray-50 dark:bg-gray-950">
-    <div class="container-custom">
-      <h2 class="text-3xl md:text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">أحدث الإضافات</h2>
-
-      <div class="slider-container">
-        <div class="slider-wrapper">
-          {latestMovie && (
-            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
-              <LatestCard
-                label="فيلم جديد"
-                title={latestMovie.data.title}
-                thumbnail={latestMovie.data.thumbnail}
-                href={`/movies/${latestMovie.data.id}`}
-                year={latestMovie.data.year}
-              />
-            </div>
-          )}
-
-          {latestShow && (
-            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
-              <LatestCard
-                label="مسلسل جديد"
-                title={latestShow.data.title}
-                thumbnail={latestShow.data.thumbnail}
-                href={`/shows/${latestShow.data.tv}`}
-                year={latestShow.data.year}
-              />
-            </div>
-          )}
-
-          {latestShowEpisode && (
-            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
-              <LatestCard
-                label="حلقة مسلسل جديدة"
-                title={latestShowEpisode.data.title}
-                thumbnail={shows.find(s => s.data.tv === latestShowEpisode.data.tv)?.data.thumbnail || ''}
-                href={`/shows/${latestShowEpisode.data.tv}/${latestShowEpisode.data.se}/${latestShowEpisode.data.ep}`}
-                info={`الحلقة ${latestShowEpisode.data.ep}`}
-              />
-            </div>
-          )}
-
-          {latestAnime && (
-            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
-              <LatestCard
-                label="أنمي جديد"
-                title={latestAnime.data.title}
-                thumbnail={latestAnime.data.thumbnail}
-                href={`/anime/${latestAnime.data.tv}`}
-                year={latestAnime.data.year}
-              />
-            </div>
-          )}
-
-          {latestAnimeEpisode && (
-            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
-              <LatestCard
-                label="حلقة أنمي جديدة"
-                title={latestAnimeEpisode.data.title}
-                thumbnail={anime.find(a => a.data.tv === latestAnimeEpisode.data.tv)?.data.thumbnail || ''}
-                href={`/anime/${latestAnimeEpisode.data.tv}/${latestAnimeEpisode.data.se}/${latestAnimeEpisode.data.ep}`}
-                info={`الحلقة ${latestAnimeEpisode.data.ep}`}
-              />
-            </div>
-          )}
-        </div>
+  <AutoSlider title="أحدث الإضافات" autoplay={true} interval={5000}>
+    {latestMovie && (
+      <div class="min-w-full flex-shrink-0">
+        <LatestCard
+          label="فيلم جديد"
+          title={latestMovie.data.title}
+          thumbnail={latestMovie.data.thumbnail}
+          href={`/movies/${latestMovie.data.id}`}
+          year={latestMovie.data.year}
+        />
       </div>
-    </div>
-  </section>
+    )}
+
+    {latestShow && (
+      <div class="min-w-full flex-shrink-0">
+        <LatestCard
+          label="مسلسل جديد"
+          title={latestShow.data.title}
+          thumbnail={latestShow.data.thumbnail}
+          href={`/shows/${latestShow.data.tv}`}
+          year={latestShow.data.year}
+        />
+      </div>
+    )}
+
+    {latestShowEpisode && (
+      <div class="min-w-full flex-shrink-0">
+        <LatestCard
+          label="حلقة مسلسل جديدة"
+          title={latestShowEpisode.data.title}
+          thumbnail={shows.find(s => s.data.tv === latestShowEpisode.data.tv)?.data.thumbnail || ''}
+          href={`/shows/${latestShowEpisode.data.tv}/${latestShowEpisode.data.se}/${latestShowEpisode.data.ep}`}
+          info={`الحلقة ${latestShowEpisode.data.ep}`}
+        />
+      </div>
+    )}
+
+    {latestAnime && (
+      <div class="min-w-full flex-shrink-0">
+        <LatestCard
+          label="أنمي جديد"
+          title={latestAnime.data.title}
+          thumbnail={latestAnime.data.thumbnail}
+          href={`/anime/${latestAnime.data.tv}`}
+          year={latestAnime.data.year}
+        />
+      </div>
+    )}
+
+    {latestAnimeEpisode && (
+      <div class="min-w-full flex-shrink-0">
+        <LatestCard
+          label="حلقة أنمي جديدة"
+          title={latestAnimeEpisode.data.title}
+          thumbnail={anime.find(a => a.data.tv === latestAnimeEpisode.data.tv)?.data.thumbnail || ''}
+          href={`/anime/${latestAnimeEpisode.data.tv}/${latestAnimeEpisode.data.se}/${latestAnimeEpisode.data.ep}`}
+          info={`الحلقة ${latestAnimeEpisode.data.ep}`}
+        />
+      </div>
+    )}
+  </AutoSlider>
 
   {latestEpisodes.length > 0 && (
     <Slider title="أحدث الحلقات" viewAllLink="/episodes">

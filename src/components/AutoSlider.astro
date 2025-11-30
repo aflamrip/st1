@@ -1,0 +1,314 @@
+---
+interface Props {
+  title: string;
+  autoplay?: boolean;
+  interval?: number;
+}
+
+const { title, autoplay = true, interval = 4000 } = Astro.props;
+const sliderId = `slider-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<section class="py-12 bg-gray-50 dark:bg-gray-950">
+  <div class="container-custom">
+    <h2 class="text-3xl md:text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">{title}</h2>
+
+    <div class="auto-slider-container" data-slider-id={sliderId} data-autoplay={autoplay} data-interval={interval}>
+      <button class="slider-btn slider-btn-prev" aria-label="Previous">
+        <span class="i-carbon-chevron-right text-2xl"></span>
+      </button>
+
+      <div class="slider-viewport">
+        <div class="slider-track">
+          <slot />
+        </div>
+      </div>
+
+      <button class="slider-btn slider-btn-next" aria-label="Next">
+        <span class="i-carbon-chevron-left text-2xl"></span>
+      </button>
+
+      <div class="slider-dots"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .auto-slider-container {
+    position: relative;
+    user-select: none;
+  }
+
+  .slider-viewport {
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+
+  .slider-track {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+  }
+
+  .auto-slider-container:hover .slider-btn {
+    opacity: 1;
+  }
+
+  .slider-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .slider-btn-prev {
+    left: -24px;
+  }
+
+  .slider-btn-next {
+    right: -24px;
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .slider-btn {
+      width: 40px;
+      height: 40px;
+      opacity: 1;
+    }
+
+    .slider-btn-prev {
+      left: 8px;
+    }
+
+    .slider-btn-next {
+      right: 8px;
+    }
+  }
+</style>
+
+<script>
+  class AutoSlider {
+    container: HTMLElement;
+    track: HTMLElement;
+    prevBtn: HTMLButtonElement;
+    nextBtn: HTMLButtonElement;
+    dotsContainer: HTMLElement;
+    slides: HTMLElement[];
+    currentIndex: number = 0;
+    autoplay: boolean;
+    interval: number;
+    autoplayTimer: number | null = null;
+    isDragging: boolean = false;
+    startX: number = 0;
+    currentTranslate: number = 0;
+    prevTranslate: number = 0;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.track = container.querySelector('.slider-track') as HTMLElement;
+      this.prevBtn = container.querySelector('.slider-btn-prev') as HTMLButtonElement;
+      this.nextBtn = container.querySelector('.slider-btn-next') as HTMLButtonElement;
+      this.dotsContainer = container.querySelector('.slider-dots') as HTMLElement;
+      this.autoplay = container.dataset.autoplay === 'true';
+      this.interval = parseInt(container.dataset.interval || '4000');
+
+      this.slides = Array.from(this.track.children) as HTMLElement[];
+
+      this.init();
+    }
+
+    init() {
+      if (this.slides.length === 0) return;
+
+      this.createDots();
+      this.attachEventListeners();
+
+      if (this.autoplay) {
+        this.startAutoplay();
+        this.container.addEventListener('mouseenter', () => this.stopAutoplay());
+        this.container.addEventListener('mouseleave', () => this.startAutoplay());
+      }
+
+      this.updateSlider();
+    }
+
+    createDots() {
+      this.slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'slider-dot';
+        dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+        dot.addEventListener('click', () => this.goToSlide(index));
+        this.dotsContainer.appendChild(dot);
+      });
+    }
+
+    attachEventListeners() {
+      this.prevBtn.addEventListener('click', () => this.prevSlide());
+      this.nextBtn.addEventListener('click', () => this.nextSlide());
+
+      this.track.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
+      this.track.addEventListener('touchmove', this.touchMove.bind(this), { passive: true });
+      this.track.addEventListener('touchend', this.touchEnd.bind(this));
+
+      this.track.addEventListener('mousedown', this.touchStart.bind(this));
+      this.track.addEventListener('mousemove', this.touchMove.bind(this));
+      this.track.addEventListener('mouseup', this.touchEnd.bind(this));
+      this.track.addEventListener('mouseleave', this.touchEnd.bind(this));
+    }
+
+    touchStart(e: TouchEvent | MouseEvent) {
+      this.isDragging = true;
+      this.startX = this.getPositionX(e);
+      this.track.style.transition = 'none';
+      this.stopAutoplay();
+    }
+
+    touchMove(e: TouchEvent | MouseEvent) {
+      if (!this.isDragging) return;
+      const currentX = this.getPositionX(e);
+      const diff = currentX - this.startX;
+      this.currentTranslate = this.prevTranslate + diff;
+    }
+
+    touchEnd() {
+      if (!this.isDragging) return;
+      this.isDragging = false;
+      this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+
+      const movedBy = this.currentTranslate - this.prevTranslate;
+
+      if (movedBy < -100 && this.currentIndex < this.slides.length - 1) {
+        this.nextSlide();
+      } else if (movedBy > 100 && this.currentIndex > 0) {
+        this.prevSlide();
+      } else {
+        this.updateSlider();
+      }
+
+      if (this.autoplay) {
+        this.startAutoplay();
+      }
+    }
+
+    getPositionX(e: TouchEvent | MouseEvent): number {
+      return e instanceof TouchEvent ? e.touches[0].clientX : e.clientX;
+    }
+
+    prevSlide() {
+      this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.slides.length - 1;
+      this.updateSlider();
+    }
+
+    nextSlide() {
+      this.currentIndex = this.currentIndex < this.slides.length - 1 ? this.currentIndex + 1 : 0;
+      this.updateSlider();
+    }
+
+    goToSlide(index: number) {
+      this.currentIndex = index;
+      this.updateSlider();
+      this.stopAutoplay();
+      if (this.autoplay) {
+        this.startAutoplay();
+      }
+    }
+
+    updateSlider() {
+      const slideWidth = this.slides[0].offsetWidth + 24;
+      const offset = -this.currentIndex * slideWidth;
+      this.track.style.transform = `translateX(${offset}px)`;
+      this.prevTranslate = offset;
+      this.currentTranslate = offset;
+      this.updateDots();
+    }
+
+    updateDots() {
+      const dots = this.dotsContainer.querySelectorAll('.slider-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === this.currentIndex);
+      });
+    }
+
+    startAutoplay() {
+      if (!this.autoplay) return;
+      this.stopAutoplay();
+      this.autoplayTimer = window.setInterval(() => {
+        this.nextSlide();
+      }, this.interval);
+    }
+
+    stopAutoplay() {
+      if (this.autoplayTimer) {
+        clearInterval(this.autoplayTimer);
+        this.autoplayTimer = null;
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const sliders = document.querySelectorAll('.auto-slider-container');
+    sliders.forEach(slider => new AutoSlider(slider as HTMLElement));
+  });
+</script>
+
+<style is:global>
+  .slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #d1d5db;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .slider-dot:hover {
+    background: #9ca3af;
+    transform: scale(1.2);
+  }
+
+  .slider-dot.active {
+    background: #3b82f6;
+    width: 32px;
+    border-radius: 6px;
+  }
+
+  :global(.dark) .slider-dot {
+    background: #4b5563;
+  }
+
+  :global(.dark) .slider-dot:hover {
+    background: #6b7280;
+  }
+
+  :global(.dark) .slider-dot.active {
+    background: #3b82f6;
+  }
+</style>
