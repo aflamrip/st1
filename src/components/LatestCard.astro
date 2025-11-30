@@ -40,8 +40,7 @@ const { label, title, thumbnail, href, year, info } = Astro.props;
   .latest-card {
     display: block;
     transition: all 0.3s ease;
-    min-width: 220px;
-    max-width: 250px;
+    width: 200px;
   }
 
   .latest-card:hover {
@@ -58,8 +57,13 @@ const { label, title, thumbnail, href, year, info } = Astro.props;
 
   @media (max-width: 640px) {
     .latest-card {
-      min-width: 180px;
-      max-width: 200px;
+      width: 160px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .latest-card {
+      width: 220px;
     }
   }
 </style>

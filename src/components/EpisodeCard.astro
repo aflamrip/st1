@@ -12,27 +12,45 @@ const { tv, se, ep, title, duration, type = 'show' } = Astro.props;
 const basePath = type === 'anime' ? '/anime' : '/shows';
 ---
 
-<a href={`${basePath}/${tv}/${se}/${ep}`} class="card group">
-  <div class="relative overflow-hidden">
-    <div class="card-thumb bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
-      <div class="text-center text-white">
-        <div class="text-4xl font-bold">{ep}</div>
-        <div class="text-sm mt-1">{duration}</div>
+<a href={`${basePath}/${tv}/${se}/${ep}`} class="episode-card group block transition-all">
+  <div class="aspect-video bg-gray-700 rounded-lg overflow-hidden relative">
+    <div class="absolute inset-0 flex items-center justify-center bg-gray-800">
+      <div class="text-center">
+        <span class="i-carbon-play-filled text-3xl text-primary-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+        <p class="text-xl font-bold text-gray-200">حلقة {ep}</p>
+        {duration && <p class="text-xs text-gray-400 mt-1">{duration}</p>}
       </div>
     </div>
-    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-      <span class="i-carbon-play-filled text-4xl text-white"></span>
-    </div>
   </div>
-  <div class="p-3 bg-gray-800">
-    <h3 class="font-semibold text-sm line-clamp-2 text-gray-100">{title}</h3>
+  <div class="pt-2">
+    <h3 class="font-medium text-xs text-gray-300 line-clamp-1">{title}</h3>
   </div>
 </a>
 
 <style>
-  .line-clamp-2 {
+  .episode-card {
+    width: 180px;
+  }
+
+  .episode-card:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .episode-card {
+      width: 150px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .episode-card {
+      width: 200px;
+    }
+  }
+
+  .line-clamp-1 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }

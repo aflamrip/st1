@@ -40,4 +40,13 @@ const { id, title, year, thumbnail } = Astro.props;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  a.card {
+    transition: all 0.3s ease;
+  }
+
+  a.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+  }
 </style>

@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ShowCard from '../../components/ShowCard.astro';
 import EpisodeCard from '../../components/EpisodeCard.astro';
+import EmblaSlider from '../../components/EmblaSlider.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -36,7 +37,7 @@ const tags = anime.data.tags.split(',').map((t: string) => t.trim());
       <div class="lg:col-span-2">
         <h1 class="text-3xl md:text-4xl font-bold mb-4">{anime.data.title}</h1>
 
-        <div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-600 dark:text-gray-400">
+        <div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-400">
           <div class="flex items-center gap-2">
             <span class="i-carbon-calendar"></span>
             <span>{anime.data.year}</span>
@@ -49,23 +50,23 @@ const tags = anime.data.tags.split(',').map((t: string) => t.trim());
 
         <div class="flex flex-wrap gap-2 mb-6">
           {tags.map((tag: string) => (
-            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded-full text-sm">
+            <span class="px-3 py-1 bg-gray-800 text-primary-400 rounded-full text-sm">
               {tag}
             </span>
           ))}
         </div>
 
-        <div class="prose dark:prose-invert max-w-none mb-8">
-          <h2 class="text-xl font-semibold mb-3">نبذة عن الأنمي</h2>
-          <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+        <div class="max-w-none mb-8">
+          <h2 class="text-xl font-semibold mb-3 text-white">نبذة عن الأنمي</h2>
+          <p class="text-gray-300 leading-relaxed">
             {anime.data.description}
           </p>
         </div>
 
         <div class="mt-12">
-          <h2 class="text-2xl font-bold mb-6">المواسم والحلقات</h2>
+          <h2 class="text-2xl font-bold mb-6 text-white">المواسم والحلقات</h2>
           {allSeasons.length === 0 ? (
-            <p class="text-gray-500">لا توجد مواسم متاحة حالياً</p>
+            <p class="text-gray-400">لا توجد مواسم متاحة حالياً</p>
           ) : (
             <div class="space-y-8">
               {allSeasons.map(season => {
@@ -74,13 +75,12 @@ const tags = anime.data.tags.split(',').map((t: string) => t.trim());
                   .sort((a, b) => a.data.ep - b.data.ep);
 
                 return (
-                  <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">الموسم {season.data.se}</h3>
-                    {seasonEpisodes.length === 0 ? (
-                      <p class="text-gray-500">لا توجد حلقات متاحة</p>
-                    ) : (
-                      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        {seasonEpisodes.map(episode => (
+                  <div class="bg-gray-800 rounded-lg p-6">
+                    <EmblaSlider title={`الموسم ${season.data.se}`}>
+                      {seasonEpisodes.length === 0 ? (
+                        <p class="text-gray-400">لا توجد حلقات متاحة</p>
+                      ) : (
+                        seasonEpisodes.map(episode => (
                           <EpisodeCard
                             tv={episode.data.tv}
                             se={episode.data.se}
@@ -89,9 +89,9 @@ const tags = anime.data.tags.split(',').map((t: string) => t.trim());
                             duration={episode.data.duration}
                             type="anime"
                           />
-                        ))}
-                      </div>
-                    )}
+                        ))
+                      )}
+                    </EmblaSlider>
                   </div>
                 );
               })}
