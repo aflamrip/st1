@@ -16,7 +16,7 @@ content:
     label: "افلام"
     type: collection
     path: "src/content/movies"
-    format: "json"
+    format: "json-frontmatter"
     fields:
       - { name: id, label: "رقم الفيلم", type: number }
       - { name: title, label: "اسم الفيلم", type: string }
