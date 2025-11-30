@@ -4,6 +4,7 @@ import Slider from '../components/Slider.astro';
 import MovieCard from '../components/MovieCard.astro';
 import ShowCard from '../components/ShowCard.astro';
 import EpisodeCard from '../components/EpisodeCard.astro';
+import LatestCard from '../components/LatestCard.astro';
 import { getCollection } from 'astro:content';
 
 const movies = (await getCollection('movies')).filter(m => !m.data.draft).slice(0, 10);
@@ -11,25 +12,84 @@ const shows = (await getCollection('shows')).filter(s => !s.data.draft).slice(0,
 const anime = (await getCollection('anime')).filter(a => !a.data.draft).slice(0, 10);
 
 const allEpisodes = (await getCollection('episodes')).filter(e => !e.data.draft);
+const allAnimeEpisodes = (await getCollection('animeEpisodes')).filter(e => !e.data.draft);
 const latestEpisodes = allEpisodes.slice(0, 10);
+
+// Get latest additions
+const latestMovie = movies[0];
+const latestShow = shows[0];
+const latestShowEpisode = allEpisodes[0];
+const latestAnime = anime[0];
+const latestAnimeEpisode = allAnimeEpisodes[0];
 ---
 
 <Layout title="Stream - منصة مشاهدة الأفلام والمسلسلات">
-  <section class="hero bg-gradient-to-r from-primary-600 to-primary-800 text-white py-20">
-    <div class="container-custom text-center">
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-        مرحباً بك في Stream
-      </h1>
-      <p class="text-xl md:text-2xl mb-8 text-primary-100">
-        شاهد أحدث الأفلام والمسلسلات والأنمي
-      </p>
-      <div class="flex gap-4 justify-center flex-wrap">
-        <a href="/movies" class="btn-primary text-lg px-8 py-3">
-          تصفح الأفلام
-        </a>
-        <a href="/shows" class="btn bg-white text-primary-600 hover:bg-gray-100 text-lg px-8 py-3">
-          تصفح المسلسلات
-        </a>
+  <section class="hero-latest py-12 bg-gray-50 dark:bg-gray-950">
+    <div class="container-custom">
+      <h2 class="text-3xl md:text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">أحدث الإضافات</h2>
+
+      <div class="slider-container">
+        <div class="slider-wrapper">
+          {latestMovie && (
+            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
+              <LatestCard
+                label="فيلم جديد"
+                title={latestMovie.data.title}
+                thumbnail={latestMovie.data.thumbnail}
+                href={`/movies/${latestMovie.data.id}`}
+                year={latestMovie.data.year}
+              />
+            </div>
+          )}
+
+          {latestShow && (
+            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
+              <LatestCard
+                label="مسلسل جديد"
+                title={latestShow.data.title}
+                thumbnail={latestShow.data.thumbnail}
+                href={`/shows/${latestShow.data.tv}`}
+                year={latestShow.data.year}
+              />
+            </div>
+          )}
+
+          {latestShowEpisode && (
+            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
+              <LatestCard
+                label="حلقة مسلسل جديدة"
+                title={latestShowEpisode.data.title}
+                thumbnail={shows.find(s => s.data.tv === latestShowEpisode.data.tv)?.data.thumbnail || ''}
+                href={`/shows/${latestShowEpisode.data.tv}/${latestShowEpisode.data.se}/${latestShowEpisode.data.ep}`}
+                info={`الحلقة ${latestShowEpisode.data.ep}`}
+              />
+            </div>
+          )}
+
+          {latestAnime && (
+            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
+              <LatestCard
+                label="أنمي جديد"
+                title={latestAnime.data.title}
+                thumbnail={latestAnime.data.thumbnail}
+                href={`/anime/${latestAnime.data.tv}`}
+                year={latestAnime.data.year}
+              />
+            </div>
+          )}
+
+          {latestAnimeEpisode && (
+            <div class="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] snap-start">
+              <LatestCard
+                label="حلقة أنمي جديدة"
+                title={latestAnimeEpisode.data.title}
+                thumbnail={anime.find(a => a.data.tv === latestAnimeEpisode.data.tv)?.data.thumbnail || ''}
+                href={`/anime/${latestAnimeEpisode.data.tv}/${latestAnimeEpisode.data.se}/${latestAnimeEpisode.data.ep}`}
+                info={`الحلقة ${latestAnimeEpisode.data.ep}`}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   </section>
