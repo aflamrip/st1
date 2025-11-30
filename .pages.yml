@@ -55,7 +55,7 @@ content:
   - name: "seasons"
     label: "مواسم المسلسلات"
     type: collection
-    path: "src/content/seasons"
+    path: "src/content/shows/seasons"
     fields:
       - { name: tv, type: number, label: "رقم المسلسل" }
       - { name: se, type: number, label: "رقم الموسم" }
@@ -65,7 +65,7 @@ content:
   - name: "episodes"
     label: "حلقات المسلسلات"
     type: collection
-    path: "src/content/episodes"
+    path: "src/content/shows/episodes"
     fields:
       - { name: ep, type: number, label: "رقم الحلقة" }
       - { name: tv, type: number, label: "رقم المسلسل" }
