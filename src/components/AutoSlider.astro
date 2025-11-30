@@ -42,6 +42,11 @@ const sliderId = `slider-${Math.random().toString(36).substr(2, 9)}`;
   .slider-viewport {
     overflow: hidden;
     border-radius: 1rem;
+    cursor: grab;
+  }
+
+  .slider-viewport:active {
+    cursor: grabbing;
   }
 
   .slider-track {
@@ -183,10 +188,13 @@ const sliderId = `slider-${Math.random().toString(36).substr(2, 9)}`;
     }
 
     touchStart(e: TouchEvent | MouseEvent) {
+      if (e instanceof MouseEvent && e.button !== 0) return;
       this.isDragging = true;
       this.startX = this.getPositionX(e);
+      this.prevTranslate = -this.currentIndex * (this.slides[0].offsetWidth + 24);
       this.track.style.transition = 'none';
       this.stopAutoplay();
+      e.preventDefault();
     }
 
     touchMove(e: TouchEvent | MouseEvent) {
@@ -194,6 +202,7 @@ const sliderId = `slider-${Math.random().toString(36).substr(2, 9)}`;
       const currentX = this.getPositionX(e);
       const diff = currentX - this.startX;
       this.currentTranslate = this.prevTranslate + diff;
+      this.track.style.transform = `translateX(${this.currentTranslate}px)`;
     }
 
     touchEnd() {
@@ -242,6 +251,7 @@ const sliderId = `slider-${Math.random().toString(36).substr(2, 9)}`;
     updateSlider() {
       const slideWidth = this.slides[0].offsetWidth + 24;
       const offset = -this.currentIndex * slideWidth;
+      this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
       this.track.style.transform = `translateX(${offset}px)`;
       this.prevTranslate = offset;
       this.currentTranslate = offset;

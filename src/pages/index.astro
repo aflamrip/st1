@@ -106,7 +106,7 @@ const latestAnimeEpisode = allAnimeEpisodes[0];
   {movies.length > 0 && (
     <Slider title="الأفلام" viewAllLink="/movies">
       {movies.map(movie => (
-        <div class="min-w-[150px] sm:min-w-[180px] snap-start">
+        <div class="min-w-[200px] sm:min-w-[220px] snap-start">
           <MovieCard
             id={movie.data.id}
             title={movie.data.title}
@@ -121,7 +121,7 @@ const latestAnimeEpisode = allAnimeEpisodes[0];
   {shows.length > 0 && (
     <Slider title="المسلسلات" viewAllLink="/shows">
       {shows.map(show => (
-        <div class="min-w-[150px] sm:min-w-[180px] snap-start">
+        <div class="min-w-[200px] sm:min-w-[220px] snap-start">
           <ShowCard
             tv={show.data.tv}
             title={show.data.title}
@@ -136,7 +136,7 @@ const latestAnimeEpisode = allAnimeEpisodes[0];
   {anime.length > 0 && (
     <Slider title="الأنمي" viewAllLink="/anime">
       {anime.map(item => (
-        <div class="min-w-[150px] sm:min-w-[180px] snap-start">
+        <div class="min-w-[200px] sm:min-w-[220px] snap-start">
           <ShowCard
             tv={item.data.tv}
             title={item.data.title}

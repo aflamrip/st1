@@ -31,12 +31,30 @@ const { title, viewAllLink } = Astro.props;
     overflow-x: auto;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: #3b82f6 transparent;
+    cursor: grab;
+  }
+
+  .slider-container:active {
+    cursor: grabbing;
   }
 
   .slider-container::-webkit-scrollbar {
-    display: none;
+    height: 8px;
+  }
+
+  .slider-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .slider-container::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 4px;
+  }
+
+  .slider-container::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
   }
 
   .slider-wrapper {
@@ -51,3 +69,42 @@ const { title, viewAllLink } = Astro.props;
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sliders = document.querySelectorAll('.slider-container');
+
+    sliders.forEach(slider => {
+      let isDown = false;
+      let startX: number;
+      let scrollLeft: number;
+
+      slider.addEventListener('mousedown', (e: Event) => {
+        const mouseEvent = e as MouseEvent;
+        isDown = true;
+        slider.classList.add('active');
+        startX = mouseEvent.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+
+      slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+
+      slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+
+      slider.addEventListener('mousemove', (e: Event) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const mouseEvent = e as MouseEvent;
+        const x = mouseEvent.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    });
+  });
+</script>

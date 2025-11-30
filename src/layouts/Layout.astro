@@ -112,17 +112,20 @@ const { title, description = 'Watch movies, shows and anime', dir = 'rtl' } = As
       const setTheme = (theme) => {
         if (theme === 'dark') {
           html.classList.add('dark');
-          themeIcon?.classList.remove('i-carbon-sun');
-          themeIcon?.classList.add('i-carbon-moon');
+          if (themeIcon) {
+            themeIcon.className = 'i-carbon-moon text-xl';
+          }
         } else {
           html.classList.remove('dark');
-          themeIcon?.classList.remove('i-carbon-moon');
-          themeIcon?.classList.add('i-carbon-sun');
+          if (themeIcon) {
+            themeIcon.className = 'i-carbon-sun text-xl';
+          }
         }
         localStorage.setItem('theme', theme);
       };
 
-      setTheme(getTheme());
+      const initialTheme = getTheme();
+      setTheme(initialTheme);
 
       themeToggle?.addEventListener('click', () => {
         const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
