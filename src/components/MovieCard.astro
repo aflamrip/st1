@@ -10,11 +10,11 @@ const { id, title, year, thumbnail } = Astro.props;
 ---
 
 <a href={`/movies/${id}`} class="card group">
-  <div class="relative overflow-hidden">
+  <div class="relative overflow-hidden rounded-lg">
     <img
       src={thumbnail}
       alt={title}
-      class="card-poster group-hover:scale-110 transition-transform duration-300"
+      class="w-full h-[240px] object-cover group-hover:scale-110 transition-transform duration-300"
       loading="lazy"
     />
     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -25,8 +25,8 @@ const { id, title, year, thumbnail } = Astro.props;
       </div>
     </div>
   </div>
-  <div class="p-3">
-    <h3 class="font-semibold text-sm mb-1 line-clamp-2">{title}</h3>
+  <div class="p-3 bg-white dark:bg-gray-900">
+    <h3 class="font-semibold text-sm mb-1 line-clamp-2 text-gray-900 dark:text-gray-100">{title}</h3>
     <p class="text-xs text-gray-500 dark:text-gray-400">{year}</p>
   </div>
 </a>

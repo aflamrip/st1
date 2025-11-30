@@ -12,7 +12,7 @@ const { title, viewAllLink } = Astro.props;
     <div class="flex items-center justify-between mb-6">
       <h2 class="section-title">{title}</h2>
       {viewAllLink && (
-        <a href={viewAllLink} class="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center gap-2">
+        <a href={viewAllLink} class="text-primary-500 hover:text-primary-600 font-medium text-sm flex items-center gap-2 transition-colors">
           عرض الكل
           <span class="i-carbon-arrow-left"></span>
         </a>
@@ -27,12 +27,27 @@ const { title, viewAllLink } = Astro.props;
 </section>
 
 <style>
+  .slider-container {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
   .slider-container::-webkit-scrollbar {
     display: none;
   }
 
-  .slider-container {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .slider-wrapper {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .slider-wrapper {
+      gap: 1.25rem;
+    }
   }
 </style>

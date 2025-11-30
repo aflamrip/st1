@@ -38,14 +38,14 @@ export default defineConfig({
     }
   },
   shortcuts: {
-    'card': 'bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105',
+    'card': 'bg-white dark:bg-gray-900 rounded-lg shadow-lg dark:shadow-gray-900/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/20',
     'card-poster': 'aspect-[2/3] w-full object-cover',
     'card-thumb': 'aspect-video w-full object-cover',
     'btn': 'px-4 py-2 rounded-md font-medium transition-colors',
-    'btn-primary': 'btn bg-primary-600 text-white hover:bg-primary-700',
-    'btn-secondary': 'btn bg-gray-200 text-gray-800 hover:bg-gray-300',
+    'btn-primary': 'btn bg-primary-500 text-white hover:bg-primary-600',
+    'btn-secondary': 'btn bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600',
     'container-custom': 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8',
-    'section-title': 'text-2xl md:text-3xl font-bold mb-6',
+    'section-title': 'text-2xl md:text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100',
     'slider-container': 'overflow-x-auto snap-x snap-mandatory',
     'slider-wrapper': 'flex gap-4 pb-4',
     'grid-responsive': 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4',
