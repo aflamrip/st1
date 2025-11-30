@@ -6,7 +6,8 @@ import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
   site: 'https://example.com',
-  output: 'static',
+  output: 'server',
+  adapter: cloudflare(),
   integrations: [
     UnoCSS({
       injectReset: true

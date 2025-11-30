@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/sitemap": "^3.6.0",
+    "@supabase/supabase-js": "^2.86.0",
     "@unocss/astro": "^66.5.10-beta.1",
     "@vite-pwa/astro": "^1.2.0",
     "astro": "^5.2.5",
