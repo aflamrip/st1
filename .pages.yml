@@ -4,10 +4,10 @@ media:
     input: "public/uploads"
     output: "/uploads"
     extensions:
-      - "jpg"
-      - "png"
-      - "jpeg"
-      - "mp4"
+      - ".jpg"
+      - ".png"
+      - ".jpeg"
+      - ".mp4"
 
 content:
 
@@ -15,8 +15,7 @@ content:
   - name: "movies"
     label: "افلام"
     type: collection
-    path: "src/content"
-    format: "json"
+    path: "src/content/movies"
     fields:
       - { name: id, label: "رقم الفيلم", type: number }
       - { name: title, label: "اسم الفيلم", type: string }
@@ -43,7 +42,6 @@ content:
     label: "مسلسلات"
     type: collection
     path: "src/content/shows"
-    format: "json"
     fields:
       - { name: tv, type: number, label: "رقم المسلسل" }
       - { name: title, type: string, label: "اسم المسلسل" }
@@ -58,7 +56,6 @@ content:
     label: "مواسم المسلسلات"
     type: collection
     path: "src/content/seasons"
-    format: "json"
     fields:
       - { name: tv, type: number, label: "رقم المسلسل" }
       - { name: se, type: number, label: "رقم الموسم" }
@@ -69,7 +66,6 @@ content:
     label: "حلقات المسلسلات"
     type: collection
     path: "src/content/episodes"
-    format: "json"
     fields:
       - { name: ep, type: number, label: "رقم الحلقة" }
       - { name: tv, type: number, label: "رقم المسلسل" }
@@ -95,7 +91,6 @@ content:
     label: "انمي"
     type: collection
     path: "src/content/anime"
-    format: "json"
     fields:
       - { name: tv, type: number, label: "رقم الأنمي" }
       - { name: title, type: string, label: "اسم الأنمي" }
@@ -109,8 +104,7 @@ content:
   - name: "anime_seasons"
     label: "مواسم الانمي"
     type: collection
-    path: "src/content/animeSeasons"
-    format: "json"
+    path: "src/content/anime/seasons"
     fields:
       - { name: tv, type: number, label: "رقم الأنمي" }
       - { name: se, type: number, label: "رقم الموسم" }
@@ -120,8 +114,7 @@ content:
   - name: "anime_episodes"
     label: "حلقات الانمي"
     type: collection
-    path: "src/content/animeEpisodes"
-    format: "json"
+    path: "src/content/anime/episodes"
     fields:
       - { name: ep, type: number, label: "رقم الحلقة" }
       - { name: tv, type: number, label: "رقم الأنمي" }

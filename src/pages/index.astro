@@ -3,55 +3,15 @@ import Layout from '../layouts/Layout.astro';
 import Slider from '../components/Slider.astro';
 import MovieCard from '../components/MovieCard.astro';
 import ShowCard from '../components/ShowCard.astro';
-import { supabase, type Movie, type Show, type Episode, type Season } from '../lib/supabase';
+import EpisodeCard from '../components/EpisodeCard.astro';
+import { getCollection } from 'astro:content';
 
-// Fetch movies
-const { data: movies } = await supabase
-  .from('movies')
-  .select('*')
-  .eq('draft', false)
-  .order('created_at', { ascending: false })
-  .limit(10);
+const movies = (await getCollection('movies')).filter(m => !m.data.draft).slice(0, 10);
+const shows = (await getCollection('shows')).filter(s => !s.data.draft).slice(0, 10);
+const anime = (await getCollection('anime')).filter(a => !a.data.draft).slice(0, 10);
 
-// Fetch TV shows
-const { data: shows } = await supabase
-  .from('shows')
-  .select('*')
-  .eq('draft', false)
-  .eq('type', 'show')
-  .order('created_at', { ascending: false })
-  .limit(10);
-
-// Fetch anime
-const { data: anime } = await supabase
-  .from('shows')
-  .select('*')
-  .eq('draft', false)
-  .eq('type', 'anime')
-  .order('created_at', { ascending: false })
-  .limit(10);
-
-// Fetch latest episodes with their season and show info
-const { data: latestEpisodes } = await supabase
-  .from('episodes')
-  .select(`
-    *,
-    season:seasons!inner (
-      id,
-      show_id,
-      season_number,
-      show:shows!inner (
-        id,
-        title,
-        type
-      )
-    )
-  `)
-  .eq('draft', false)
-  .eq('season.draft', false)
-  .eq('season.show.draft', false)
-  .order('created_at', { ascending: false })
-  .limit(10);
+const allEpisodes = (await getCollection('episodes')).filter(e => !e.data.draft);
+const latestEpisodes = allEpisodes.slice(0, 10);
 ---
 
 <Layout title="Stream - منصة مشاهدة الأفلام والمسلسلات">
@@ -74,78 +34,61 @@ const { data: latestEpisodes } = await supabase
     </div>
   </section>
 
-  {latestEpisodes && latestEpisodes.length > 0 && (
-    <Slider title="أحدث الحلقات">
-      {latestEpisodes.map((episode: any) => {
-        const showType = episode.season?.show?.type || 'show';
-        const basePath = showType === 'anime' ? '/anime' : '/shows';
-        const showId = episode.season?.show_id;
-        const seasonNum = episode.season?.season_number;
-
-        return (
-          <div class="min-w-[200px] sm:min-w-[250px] snap-start">
-            <a href={`${basePath}/${showId}/${seasonNum}/${episode.episode_number}`} class="card group">
-              <div class="relative overflow-hidden">
-                <div class="card-thumb bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
-                  <div class="text-center text-white">
-                    <div class="text-4xl font-bold">{episode.episode_number}</div>
-                    <div class="text-sm mt-1">{episode.duration}</div>
-                  </div>
-                </div>
-                <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span class="i-carbon-play-filled text-4xl text-white"></span>
-                </div>
-              </div>
-              <div class="p-3">
-                <h3 class="font-semibold text-sm line-clamp-2">{episode.title}</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{episode.season?.show?.title}</p>
-              </div>
-            </a>
-          </div>
-        );
-      })}
+  {latestEpisodes.length > 0 && (
+    <Slider title="أحدث الحلقات" viewAllLink="/episodes">
+      {latestEpisodes.map(episode => (
+        <div class="min-w-[200px] sm:min-w-[250px] snap-start">
+          <EpisodeCard
+            tv={episode.data.tv}
+            se={episode.data.se}
+            ep={episode.data.ep}
+            title={episode.data.title}
+            duration={episode.data.duration}
+          />
+        </div>
+      ))}
     </Slider>
   )}
 
-  {movies && movies.length > 0 && (
+  {movies.length > 0 && (
     <Slider title="الأفلام" viewAllLink="/movies">
-      {movies.map((movie: Movie) => (
+      {movies.map(movie => (
         <div class="min-w-[150px] sm:min-w-[180px] snap-start">
           <MovieCard
-            id={movie.id}
-            title={movie.title}
-            year={movie.year}
-            thumbnail={movie.thumbnail}
+            id={movie.data.id}
+            title={movie.data.title}
+            year={movie.data.year}
+            thumbnail={movie.data.thumbnail}
           />
         </div>
       ))}
     </Slider>
   )}
 
-  {shows && shows.length > 0 && (
+  {shows.length > 0 && (
     <Slider title="المسلسلات" viewAllLink="/shows">
-      {shows.map((show: Show) => (
+      {shows.map(show => (
         <div class="min-w-[150px] sm:min-w-[180px] snap-start">
           <ShowCard
-            tv={show.id}
-            title={show.title}
-            year={show.year}
-            thumbnail={show.thumbnail}
+            tv={show.data.tv}
+            title={show.data.title}
+            year={show.data.year}
+            thumbnail={show.data.thumbnail}
           />
         </div>
       ))}
     </Slider>
   )}
 
-  {anime && anime.length > 0 && (
+  {anime.length > 0 && (
     <Slider title="الأنمي" viewAllLink="/anime">
-      {anime.map((item: Show) => (
+      {anime.map(item => (
         <div class="min-w-[150px] sm:min-w-[180px] snap-start">
           <ShowCard
-            tv={item.id}
-            title={item.title}
-            year={item.year}
-            thumbnail={item.thumbnail}
+            tv={item.data.tv}
+            title={item.data.title}
+            year={item.data.year}
+            thumbnail={item.data.thumbnail}
             type="anime"
           />
         </div>
@@ -153,12 +96,3 @@ const { data: latestEpisodes } = await supabase
     </Slider>
   )}
 </Layout>
-
-<style>
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-</style>
