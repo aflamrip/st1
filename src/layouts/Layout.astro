@@ -1,0 +1,95 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  dir?: 'ltr' | 'rtl';
+}
+
+const { title, description = 'Watch movies, shows and anime', dir = 'rtl' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ar" dir={dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  </head>
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50">
+      <nav class="container-custom py-4">
+        <div class="flex items-center justify-between">
+          <a href="/" class="text-2xl font-bold text-primary-600">
+            Stream
+          </a>
+
+          <div class="flex items-center gap-6">
+            <a href="/movies" class="hover:text-primary-600 transition-colors">أفلام</a>
+            <a href="/shows" class="hover:text-primary-600 transition-colors">مسلسلات</a>
+            <a href="/anime" class="hover:text-primary-600 transition-colors">أنمي</a>
+            <a href="/search" class="hover:text-primary-600 transition-colors">
+              <span class="i-carbon-search text-xl"></span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="min-h-screen">
+      <slot />
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 mt-20 py-12">
+      <div class="container-custom">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4">Stream</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              منصة مشاهدة الأفلام والمسلسلات والأنمي
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">روابط سريعة</h3>
+            <ul class="space-y-2">
+              <li><a href="/movies" class="text-gray-600 dark:text-gray-400 hover:text-primary-600">أفلام</a></li>
+              <li><a href="/shows" class="text-gray-600 dark:text-gray-400 hover:text-primary-600">مسلسلات</a></li>
+              <li><a href="/anime" class="text-gray-600 dark:text-gray-400 hover:text-primary-600">أنمي</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">تواصل معنا</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              info@example.com
+            </p>
+          </div>
+        </div>
+        <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-gray-600 dark:text-gray-400">
+          <p>&copy; 2025 Stream. جميع الحقوق محفوظة.</p>
+        </div>
+      </div>
+    </footer>
+
+    <style is:global>
+      * {
+        font-family: 'Cairo', sans-serif;
+      }
+
+      html[dir="rtl"] {
+        text-align: right;
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+    </style>
+
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+  </body>
+</html>

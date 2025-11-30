@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ShowCard from '../../components/ShowCard.astro';
+import { getCollection } from 'astro:content';
+
+const shows = (await getCollection('shows')).filter(s => !s.data.draft);
+---
+
+<Layout title="المسلسلات - Stream">
+  <div class="container-custom py-12">
+    <h1 class="text-3xl md:text-4xl font-bold mb-8">المسلسلات</h1>
+
+    {shows.length === 0 ? (
+      <div class="text-center py-20">
+        <p class="text-gray-500 text-lg">لا توجد مسلسلات متاحة حالياً</p>
+      </div>
+    ) : (
+      <div class="grid-responsive">
+        {shows.map(show => (
+          <ShowCard
+            tv={show.data.tv}
+            title={show.data.title}
+            year={show.data.year}
+            thumbnail={show.data.thumbnail}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

@@ -1,0 +1,108 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import VideoPlayer from '../../../../components/VideoPlayer.astro';
+import EpisodeCard from '../../../../components/EpisodeCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('animeEpisodes');
+  return episodes
+    .filter(e => !e.data.draft)
+    .map(episode => ({
+      params: {
+        tv: episode.data.tv.toString(),
+        se: episode.data.se.toString(),
+        ep: episode.data.ep.toString(),
+      },
+      props: { episode },
+    }));
+}
+
+const { episode } = Astro.props;
+const { tv, se, ep } = episode.data;
+
+const anime = (await getCollection('anime')).find(a => a.data.tv === tv);
+
+const seasonEpisodes = (await getCollection('animeEpisodes'))
+  .filter(e => !e.data.draft && e.data.tv === tv && e.data.se === se)
+  .sort((a, b) => a.data.ep - b.data.ep);
+
+const currentIndex = seasonEpisodes.findIndex(e => e.data.ep === ep);
+const prevEpisode = currentIndex > 0 ? seasonEpisodes[currentIndex - 1] : null;
+const nextEpisode = currentIndex < seasonEpisodes.length - 1 ? seasonEpisodes[currentIndex + 1] : null;
+---
+
+<Layout title={`${episode.data.title} - ${anime?.data.title || 'أنمي'} - Stream`}>
+  <div class="container-custom py-12">
+    <div class="mb-6">
+      <a href={`/anime/${tv}`} class="text-primary-600 hover:text-primary-700 flex items-center gap-2 mb-2">
+        <span class="i-carbon-arrow-right"></span>
+        العودة إلى {anime?.data.title || 'الأنمي'}
+      </a>
+      <h1 class="text-2xl md:text-3xl font-bold">
+        {episode.data.title}
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">
+        الموسم {se} - الحلقة {ep} - {episode.data.duration}
+      </p>
+    </div>
+
+    <VideoPlayer
+      source={episode.data.video.source}
+      sourceType={episode.data.video.source_type}
+      title={episode.data.title}
+    />
+
+    <div class="flex gap-4 mt-6">
+      {prevEpisode ? (
+        <a
+          href={`/anime/${tv}/${se}/${prevEpisode.data.ep}`}
+          class="btn-secondary flex items-center gap-2"
+        >
+          <span class="i-carbon-arrow-right"></span>
+          الحلقة السابقة
+        </a>
+      ) : (
+        <button disabled class="btn-secondary opacity-50 cursor-not-allowed flex items-center gap-2">
+          <span class="i-carbon-arrow-right"></span>
+          الحلقة السابقة
+        </button>
+      )}
+
+      {nextEpisode ? (
+        <a
+          href={`/anime/${tv}/${se}/${nextEpisode.data.ep}`}
+          class="btn-primary flex items-center gap-2"
+        >
+          الحلقة التالية
+          <span class="i-carbon-arrow-left"></span>
+        </a>
+      ) : (
+        <button disabled class="btn-primary opacity-50 cursor-not-allowed flex items-center gap-2">
+          الحلقة التالية
+          <span class="i-carbon-arrow-left"></span>
+        </button>
+      )}
+    </div>
+
+    {seasonEpisodes.length > 1 && (
+      <div class="mt-12">
+        <h2 class="text-2xl font-bold mb-6">حلقات أخرى من الموسم {se}</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {seasonEpisodes
+            .filter(e => e.data.ep !== ep)
+            .map(otherEpisode => (
+              <EpisodeCard
+                tv={otherEpisode.data.tv}
+                se={otherEpisode.data.se}
+                ep={otherEpisode.data.ep}
+                title={otherEpisode.data.title}
+                duration={otherEpisode.data.duration}
+                type="anime"
+              />
+            ))}
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>

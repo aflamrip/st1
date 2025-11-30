@@ -1,0 +1,64 @@
+---
+interface Props {
+  source: string;
+  sourceType: 'mp4' | 'embed';
+  title?: string;
+}
+
+const { source, sourceType, title } = Astro.props;
+---
+
+<div class="video-player-container bg-black rounded-lg overflow-hidden">
+  {sourceType === 'mp4' ? (
+    <video
+      id="player"
+      class="plyr-player"
+      controls
+      data-plyr-config='{"autopause": false}'
+    >
+      <source src={source} type="video/mp4" />
+    </video>
+  ) : (
+    <div class="aspect-video">
+      <iframe
+        src={source}
+        title={title}
+        class="w-full h-full"
+        allowfullscreen
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    </div>
+  )}
+</div>
+
+{sourceType === 'mp4' && (
+  <script>
+    if (typeof window !== 'undefined' && window.Plyr) {
+      document.addEventListener('DOMContentLoaded', () => {
+        const player = new window.Plyr('#player', {
+          controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'fullscreen'],
+          i18n: {
+            restart: 'إعادة التشغيل',
+            play: 'تشغيل',
+            pause: 'إيقاف',
+            mute: 'كتم',
+            unmute: 'إلغاء الكتم',
+            enterFullscreen: 'ملء الشاشة',
+            exitFullscreen: 'خروج من ملء الشاشة',
+          }
+        });
+      });
+    }
+  </script>
+)}
+
+<style>
+  .video-player-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+</style>

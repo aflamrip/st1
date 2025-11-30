@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import MovieCard from '../../components/MovieCard.astro';
+import { getCollection } from 'astro:content';
+
+const movies = (await getCollection('movies')).filter(m => !m.data.draft);
+---
+
+<Layout title="الأفلام - Stream">
+  <div class="container-custom py-12">
+    <h1 class="text-3xl md:text-4xl font-bold mb-8">الأفلام</h1>
+
+    {movies.length === 0 ? (
+      <div class="text-center py-20">
+        <p class="text-gray-500 text-lg">لا توجد أفلام متاحة حالياً</p>
+      </div>
+    ) : (
+      <div class="grid-responsive">
+        {movies.map(movie => (
+          <MovieCard
+            id={movie.data.id}
+            title={movie.data.title}
+            year={movie.data.year}
+            thumbnail={movie.data.thumbnail}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

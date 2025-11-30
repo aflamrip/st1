@@ -1,0 +1,43 @@
+---
+interface Props {
+  tv: number;
+  title: string;
+  year: number;
+  thumbnail: string;
+  type?: 'show' | 'anime';
+}
+
+const { tv, title, year, thumbnail, type = 'show' } = Astro.props;
+const basePath = type === 'anime' ? '/anime' : '/shows';
+---
+
+<a href={`${basePath}/${tv}`} class="card group">
+  <div class="relative overflow-hidden">
+    <img
+      src={thumbnail}
+      alt={title}
+      class="card-poster group-hover:scale-110 transition-transform duration-300"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div class="absolute bottom-0 left-0 right-0 p-4">
+        <div class="flex items-center justify-center">
+          <span class="i-carbon-play-filled text-4xl text-white"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p-3">
+    <h3 class="font-semibold text-sm mb-1 line-clamp-2">{title}</h3>
+    <p class="text-xs text-gray-500 dark:text-gray-400">{year}</p>
+  </div>
+</a>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

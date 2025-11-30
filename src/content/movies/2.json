@@ -1,0 +1,13 @@
+{
+  "id": 2,
+  "title": "City Lights",
+  "year": 2024,
+  "thumbnail": "https://images.pexels.com/photos/1105766/pexels-photo-1105766.jpeg?auto=compress&cs=tinysrgb&w=400",
+  "description": "دراما رومانسية تدور أحداثها في قلب المدينة الكبيرة، حيث تتقاطع حيوات أشخاص مختلفين في قصة عاطفية مؤثرة.",
+  "tags": "دراما, رومانسي, حضري",
+  "draft": false,
+  "video": {
+    "source_type": "embed",
+    "source": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+  }
+}

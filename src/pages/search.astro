@@ -1,0 +1,171 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MovieCard from '../components/MovieCard.astro';
+import ShowCard from '../components/ShowCard.astro';
+---
+
+<Layout title="بحث - Stream">
+  <div class="container-custom py-12">
+    <h1 class="text-3xl md:text-4xl font-bold mb-8">البحث</h1>
+
+    <div class="mb-8">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="ابحث عن أفلام، مسلسلات، أو أنمي..."
+        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        autocomplete="off"
+      />
+    </div>
+
+    <div id="search-results" class="mt-8">
+      <p class="text-gray-500 text-center py-12">
+        ابدأ الكتابة للبحث...
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import Fuse from 'fuse.js';
+
+  interface SearchItem {
+    type: 'movie' | 'show' | 'anime';
+    id?: number;
+    tv?: number;
+    title: string;
+    year: number;
+    thumbnail: string;
+    description: string;
+  }
+
+  let fuse: Fuse<SearchItem>;
+  let searchData: SearchItem[] = [];
+
+  async function initSearch() {
+    try {
+      const [moviesRes, showsRes, animeRes] = await Promise.all([
+        fetch('/api/movies.json'),
+        fetch('/api/shows.json'),
+        fetch('/api/anime.json'),
+      ]);
+
+      const movies = await moviesRes.json().catch(() => []);
+      const shows = await showsRes.json().catch(() => []);
+      const anime = await animeRes.json().catch(() => []);
+
+      searchData = [
+        ...movies.map((m: any) => ({ ...m, type: 'movie' as const })),
+        ...shows.map((s: any) => ({ ...s, type: 'show' as const })),
+        ...anime.map((a: any) => ({ ...a, type: 'anime' as const })),
+      ];
+
+      fuse = new Fuse(searchData, {
+        keys: ['title', 'description', 'tags'],
+        threshold: 0.3,
+        includeScore: true,
+      });
+    } catch (error) {
+      console.error('Failed to initialize search:', error);
+    }
+  }
+
+  function renderResults(results: Fuse.FuseResult<SearchItem>[]) {
+    const container = document.getElementById('search-results');
+    if (!container) return;
+
+    if (results.length === 0) {
+      container.innerHTML = '<p class="text-gray-500 text-center py-12">لا توجد نتائج</p>';
+      return;
+    }
+
+    const movieResults = results.filter(r => r.item.type === 'movie');
+    const showResults = results.filter(r => r.item.type === 'show');
+    const animeResults = results.filter(r => r.item.type === 'anime');
+
+    let html = '';
+
+    if (movieResults.length > 0) {
+      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6">أفلام</h2><div class="grid-responsive">';
+      movieResults.forEach(result => {
+        const item = result.item;
+        html += `
+          <a href="/movies/${item.id}" class="card group">
+            <div class="relative overflow-hidden">
+              <img src="${item.thumbnail}" alt="${item.title}" class="card-poster group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+            </div>
+            <div class="p-3">
+              <h3 class="font-semibold text-sm mb-1">${item.title}</h3>
+              <p class="text-xs text-gray-500">${item.year}</p>
+            </div>
+          </a>
+        `;
+      });
+      html += '</div></div>';
+    }
+
+    if (showResults.length > 0) {
+      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6">مسلسلات</h2><div class="grid-responsive">';
+      showResults.forEach(result => {
+        const item = result.item;
+        html += `
+          <a href="/shows/${item.tv}" class="card group">
+            <div class="relative overflow-hidden">
+              <img src="${item.thumbnail}" alt="${item.title}" class="card-poster group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+            </div>
+            <div class="p-3">
+              <h3 class="font-semibold text-sm mb-1">${item.title}</h3>
+              <p class="text-xs text-gray-500">${item.year}</p>
+            </div>
+          </a>
+        `;
+      });
+      html += '</div></div>';
+    }
+
+    if (animeResults.length > 0) {
+      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6">أنمي</h2><div class="grid-responsive">';
+      animeResults.forEach(result => {
+        const item = result.item;
+        html += `
+          <a href="/anime/${item.tv}" class="card group">
+            <div class="relative overflow-hidden">
+              <img src="${item.thumbnail}" alt="${item.title}" class="card-poster group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+            </div>
+            <div class="p-3">
+              <h3 class="font-semibold text-sm mb-1">${item.title}</h3>
+              <p class="text-xs text-gray-500">${item.year}</p>
+            </div>
+          </a>
+        `;
+      });
+      html += '</div></div>';
+    }
+
+    container.innerHTML = html;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initSearch();
+
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = (e.target as HTMLInputElement).value.trim();
+
+        if (!query) {
+          const container = document.getElementById('search-results');
+          if (container) {
+            container.innerHTML = '<p class="text-gray-500 text-center py-12">ابدأ الكتابة للبحث...</p>';
+          }
+          return;
+        }
+
+        if (fuse) {
+          const results = fuse.search(query);
+          renderResults(results);
+        }
+      });
+    }
+  });
+</script>

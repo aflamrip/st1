@@ -1,0 +1,12 @@
+{
+  "ep": 1,
+  "tv": 1,
+  "se": 1,
+  "title": "الحلقة الأولى: البداية الجديدة",
+  "duration": "24 دقيقة",
+  "draft": false,
+  "video": {
+    "source_type": "embed",
+    "source": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+  }
+}

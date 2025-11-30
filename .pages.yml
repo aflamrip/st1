@@ -1,0 +1,129 @@
+media:
+  - name: "uploads"
+    label: "Media"
+    input: "public/uploads"
+    output: "/uploads"
+    extensions:
+      - ".jpg"
+      - ".png"
+      - ".jpeg"
+      - ".mp4"
+
+content:
+
+  # ==================== Movies ====================
+  - name: "movies"
+    label: "افلام"
+    type: collection
+    path: "src/content/movies"
+    fields:
+      - { name: id, label: "رقم الفيلم", type: number }
+      - { name: title, label: "اسم الفيلم", type: string }
+      - { name: year, label: "سنة الإنتاج", type: number }
+      - { name: thumbnail, label: "بوستر الفيلم", type: image }
+      - { name: description, label: "وصف الفيلم", type: text }
+      - { name: tags, label: "الكلمات الدلالية", type: string }
+      - { name: draft, label: "حالة النشر", type: boolean, default: false }
+      - name: video
+        label: "رابط الفيلم"
+        type: object
+        fields:
+          - name: source_type
+            label: "نوع المصدر"
+            type: select
+            options:
+              values:
+                - { value: "mp4", label: "MP4" }
+                - { value: "embed", label: "Embed" }
+          - { name: source, label: "الرابط", type: string }
+
+  # ==================== Shows ====================
+  - name: "shows"
+    label: "مسلسلات"
+    type: collection
+    path: "src/content/shows"
+    fields:
+      - { name: tv, type: number, label: "رقم المسلسل" }
+      - { name: title, type: string, label: "اسم المسلسل" }
+      - { name: description, type: text, label: "الوصف" }
+      - { name: thumbnail, type: image, label: "البوستر" }
+      - { name: year, type: number, label: "سنة الإنتاج" }
+      - { name: tags, type: string, label: "الكلمات الدلالية" }
+      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+
+  # ==================== Seasons ====================
+  - name: "seasons"
+    label: "مواسم المسلسلات"
+    type: collection
+    path: "src/content/seasons"
+    fields:
+      - { name: tv, type: number, label: "رقم المسلسل" }
+      - { name: se, type: number, label: "رقم الموسم" }
+      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+
+  # ==================== Episodes ====================
+  - name: "episodes"
+    label: "حلقات المسلسلات"
+    type: collection
+    path: "src/content/episodes"
+    fields:
+      - { name: ep, type: number, label: "رقم الحلقة" }
+      - { name: tv, type: number, label: "رقم المسلسل" }
+      - { name: se, type: number, label: "رقم الموسم" }
+      - { name: title, type: string, label: "عنوان الحلقة" }
+      - { name: duration, type: string, label: "المدة" }
+      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+      - name: video
+        label: "الفيديو"
+        type: object
+        fields:
+          - name: source_type
+            label: "نوع المصدر"
+            type: select
+            options:
+              values:
+                - { value: "mp4", label: "MP4" }
+                - { value: "embed", label: "Embed" }
+          - { name: source, type: string, label: "الرابط" }
+
+  # ==================== Anime ====================
+  - name: "anime"
+    label: "انمي"
+    type: collection
+    path: "src/content/anime"
+    fields:
+      - { name: tv, type: number, label: "رقم الأنمي" }
+      - { name: title, type: string, label: "اسم الأنمي" }
+      - { name: description, type: text, label: "الوصف" }
+      - { name: thumbnail, type: image, label: "البوستر" }
+      - { name: year, type: number, label: "سنة الإنتاج" }
+      - { name: tags, type: string, label: "الكلمات الدلالية" }
+      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+
+  # ==================== Anime Seasons ====================
+  - name: "anime_seasons"
+    label: "مواسم الانمي"
+    type: collection
+    path: "src/content/anime/seasons"
+    fields:
+      - { name: tv, type: number, label: "رقم الأنمي" }
+      - { name: se, type: number, label: "رقم الموسم" }
+      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+
+  # ==================== Anime Episodes ====================
+  - name: "anime_episodes"
+    label: "حلقات الانمي"
+    type: collection
+    path: "src/content/anime/episodes"
+    fields:
+      - { name: ep, type: number, label: "رقم الحلقة" }
+      - { name: tv, type: number, label: "رقم الأنمي" }
+      - { name: se, type: number, label: "رقم الموسم" }
+      - { name: title, type: string, label: "عنوان الحلقة" }
+      - { name: duration, type: string, label: "المدة" }
+      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+      - name: video
+        type: object
+        fields:
+          - { name: source_type, type: select, label: "نوع المصدر", options: { values: [ { value: "mp4", label: "MP4" }, { value: "embed", label: "Embed" } ] } }
+          - { name: source, type: string, label: "الرابط" }

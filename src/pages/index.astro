@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Slider from '../components/Slider.astro';
+import MovieCard from '../components/MovieCard.astro';
+import ShowCard from '../components/ShowCard.astro';
+import EpisodeCard from '../components/EpisodeCard.astro';
+import { getCollection } from 'astro:content';
+
+const movies = (await getCollection('movies')).filter(m => !m.data.draft).slice(0, 10);
+const shows = (await getCollection('shows')).filter(s => !s.data.draft).slice(0, 10);
+const anime = (await getCollection('anime')).filter(a => !a.data.draft).slice(0, 10);
+
+const allEpisodes = (await getCollection('episodes')).filter(e => !e.data.draft);
+const latestEpisodes = allEpisodes.slice(0, 10);
+---
+
+<Layout title="Stream - منصة مشاهدة الأفلام والمسلسلات">
+  <section class="hero bg-gradient-to-r from-primary-600 to-primary-800 text-white py-20">
+    <div class="container-custom text-center">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+        مرحباً بك في Stream
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 text-primary-100">
+        شاهد أحدث الأفلام والمسلسلات والأنمي
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a href="/movies" class="btn-primary text-lg px-8 py-3">
+          تصفح الأفلام
+        </a>
+        <a href="/shows" class="btn bg-white text-primary-600 hover:bg-gray-100 text-lg px-8 py-3">
+          تصفح المسلسلات
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {latestEpisodes.length > 0 && (
+    <Slider title="أحدث الحلقات" viewAllLink="/episodes">
+      {latestEpisodes.map(episode => (
+        <div class="min-w-[200px] sm:min-w-[250px] snap-start">
+          <EpisodeCard
+            tv={episode.data.tv}
+            se={episode.data.se}
+            ep={episode.data.ep}
+            title={episode.data.title}
+            duration={episode.data.duration}
+          />
+        </div>
+      ))}
+    </Slider>
+  )}
+
+  {movies.length > 0 && (
+    <Slider title="الأفلام" viewAllLink="/movies">
+      {movies.map(movie => (
+        <div class="min-w-[150px] sm:min-w-[180px] snap-start">
+          <MovieCard
+            id={movie.data.id}
+            title={movie.data.title}
+            year={movie.data.year}
+            thumbnail={movie.data.thumbnail}
+          />
+        </div>
+      ))}
+    </Slider>
+  )}
+
+  {shows.length > 0 && (
+    <Slider title="المسلسلات" viewAllLink="/shows">
+      {shows.map(show => (
+        <div class="min-w-[150px] sm:min-w-[180px] snap-start">
+          <ShowCard
+            tv={show.data.tv}
+            title={show.data.title}
+            year={show.data.year}
+            thumbnail={show.data.thumbnail}
+          />
+        </div>
+      ))}
+    </Slider>
+  )}
+
+  {anime.length > 0 && (
+    <Slider title="الأنمي" viewAllLink="/anime">
+      {anime.map(item => (
+        <div class="min-w-[150px] sm:min-w-[180px] snap-start">
+          <ShowCard
+            tv={item.data.tv}
+            title={item.data.title}
+            year={item.data.year}
+            thumbnail={item.data.thumbnail}
+            type="anime"
+          />
+        </div>
+      ))}
+    </Slider>
+  )}
+</Layout>

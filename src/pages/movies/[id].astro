@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import VideoPlayer from '../../components/VideoPlayer.astro';
+import MovieCard from '../../components/MovieCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const movies = await getCollection('movies');
+  return movies
+    .filter(m => !m.data.draft)
+    .map(movie => ({
+      params: { id: movie.data.id.toString() },
+      props: { movie },
+    }));
+}
+
+const { movie } = Astro.props;
+const allMovies = (await getCollection('movies')).filter(m => !m.data.draft && m.data.id !== movie.data.id);
+const relatedMovies = allMovies.slice(0, 6);
+
+const tags = movie.data.tags.split(',').map((t: string) => t.trim());
+---
+
+<Layout title={`${movie.data.title} - Stream`} description={movie.data.description}>
+  <div class="container-custom py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <VideoPlayer
+          source={movie.data.video.source}
+          sourceType={movie.data.video.source_type}
+          title={movie.data.title}
+        />
+
+        <div class="mt-8">
+          <h1 class="text-3xl md:text-4xl font-bold mb-4">{movie.data.title}</h1>
+
+          <div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-600 dark:text-gray-400">
+            <div class="flex items-center gap-2">
+              <span class="i-carbon-calendar"></span>
+              <span>{movie.data.year}</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            {tags.map((tag: string) => (
+              <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded-full text-sm">
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <div class="prose dark:prose-invert max-w-none">
+            <h2 class="text-xl font-semibold mb-3">نبذة عن الفيلم</h2>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              {movie.data.description}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <img
+          src={movie.data.thumbnail}
+          alt={movie.data.title}
+          class="w-full rounded-lg shadow-lg mb-6"
+          loading="lazy"
+        />
+
+        {relatedMovies.length > 0 && (
+          <div class="mt-8">
+            <h3 class="text-xl font-semibold mb-4">أفلام مقترحة</h3>
+            <div class="space-y-4">
+              {relatedMovies.map(relatedMovie => (
+                <MovieCard
+                  id={relatedMovie.data.id}
+                  title={relatedMovie.data.title}
+                  year={relatedMovie.data.year}
+                  thumbnail={relatedMovie.data.thumbnail}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>

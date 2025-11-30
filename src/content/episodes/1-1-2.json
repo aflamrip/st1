@@ -1,0 +1,12 @@
+{
+  "ep": 2,
+  "tv": 1,
+  "se": 1,
+  "title": "الأدلة الأولى",
+  "duration": "42 دقيقة",
+  "draft": false,
+  "video": {
+    "source_type": "embed",
+    "source": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+  }
+}

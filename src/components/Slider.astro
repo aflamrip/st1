@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  viewAllLink?: string;
+}
+
+const { title, viewAllLink } = Astro.props;
+---
+
+<section class="py-8">
+  <div class="container-custom">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title">{title}</h2>
+      {viewAllLink && (
+        <a href={viewAllLink} class="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center gap-2">
+          عرض الكل
+          <span class="i-carbon-arrow-left"></span>
+        </a>
+      )}
+    </div>
+    <div class="slider-container">
+      <div class="slider-wrapper">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .slider-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slider-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
