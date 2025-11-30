@@ -1,7 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import VideoPlayer from '../../components/VideoPlayer.astro';
-import MovieCard from '../../components/MovieCard.astro';
+import MovieCardSmall from '../../components/MovieCardSmall.astro';
+import EmblaSlider from '../../components/EmblaSlider.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -34,7 +35,7 @@ const tags = movie.data.tags.split(',').map((t: string) => t.trim());
         <div class="mt-8">
           <h1 class="text-3xl md:text-4xl font-bold mb-4">{movie.data.title}</h1>
 
-          <div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-600 dark:text-gray-400">
+          <div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-400">
             <div class="flex items-center gap-2">
               <span class="i-carbon-calendar"></span>
               <span>{movie.data.year}</span>
@@ -43,15 +44,15 @@ const tags = movie.data.tags.split(',').map((t: string) => t.trim());
 
           <div class="flex flex-wrap gap-2 mb-6">
             {tags.map((tag: string) => (
-              <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded-full text-sm">
+              <span class="px-3 py-1 bg-gray-800 text-primary-400 rounded-full text-sm">
                 {tag}
               </span>
             ))}
           </div>
 
-          <div class="prose dark:prose-invert max-w-none">
-            <h2 class="text-xl font-semibold mb-3">نبذة عن الفيلم</h2>
-            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <div class="max-w-none">
+            <h2 class="text-xl font-semibold mb-3 text-white">نبذة عن الفيلم</h2>
+            <p class="text-gray-300 leading-relaxed">
               {movie.data.description}
             </p>
           </div>
@@ -68,17 +69,16 @@ const tags = movie.data.tags.split(',').map((t: string) => t.trim());
 
         {relatedMovies.length > 0 && (
           <div class="mt-8">
-            <h3 class="text-xl font-semibold mb-4">أفلام مقترحة</h3>
-            <div class="space-y-4">
+            <EmblaSlider title="أفلام مقترحة">
               {relatedMovies.map(relatedMovie => (
-                <MovieCard
+                <MovieCardSmall
                   id={relatedMovie.data.id}
                   title={relatedMovie.data.title}
                   year={relatedMovie.data.year}
                   thumbnail={relatedMovie.data.thumbnail}
                 />
               ))}
-            </div>
+            </EmblaSlider>
           </div>
         )}
       </div>
