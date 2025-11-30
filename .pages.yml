@@ -55,7 +55,7 @@ content:
   - name: "seasons"
     label: "مواسم المسلسلات"
     type: collection
-    path: "src/content/shows/seasons"
+    path: "src/content/seasons"
     fields:
       - { name: tv, type: number, label: "رقم المسلسل" }
       - { name: se, type: number, label: "رقم الموسم" }
@@ -65,7 +65,7 @@ content:
   - name: "episodes"
     label: "حلقات المسلسلات"
     type: collection
-    path: "src/content/shows/episodes"
+    path: "src/content/episodes"
     fields:
       - { name: ep, type: number, label: "رقم الحلقة" }
       - { name: tv, type: number, label: "رقم المسلسل" }
@@ -104,7 +104,7 @@ content:
   - name: "anime_seasons"
     label: "مواسم الانمي"
     type: collection
-    path: "src/content/anime/seasons"
+    path: "src/content/animeSeasons"
     fields:
       - { name: tv, type: number, label: "رقم الأنمي" }
       - { name: se, type: number, label: "رقم الموسم" }
@@ -114,7 +114,7 @@ content:
   - name: "anime_episodes"
     label: "حلقات الانمي"
     type: collection
-    path: "src/content/anime/episodes"
+    path: "src/content/animeEpisodes"
     fields:
       - { name: ep, type: number, label: "رقم الحلقة" }
       - { name: tv, type: number, label: "رقم الأنمي" }
