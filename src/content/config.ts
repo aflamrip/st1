@@ -1,7 +1,8 @@
+import { glob } from 'astro/loaders';
 import { defineCollection, z } from 'astro:content';
 
 const movies = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/movies', pattern: '**/*.json' }),
   schema: z.object({
     id: z.number(),
     title: z.string(),
@@ -18,7 +19,7 @@ const movies = defineCollection({
 });
 
 const shows = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/shows', pattern: '**/*.json' }),
   schema: z.object({
     tv: z.number(),
     title: z.string(),
@@ -31,7 +32,7 @@ const shows = defineCollection({
 });
 
 const seasons = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/seasons', pattern: '**/*.json' }),
   schema: z.object({
     tv: z.number(),
     se: z.number(),
@@ -40,7 +41,7 @@ const seasons = defineCollection({
 });
 
 const episodes = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/episodes', pattern: '**/*.json' }),
   schema: z.object({
     ep: z.number(),
     tv: z.number(),
@@ -56,7 +57,7 @@ const episodes = defineCollection({
 });
 
 const anime = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/anime', pattern: '**/*.json' }),
   schema: z.object({
     tv: z.number(),
     title: z.string(),
@@ -69,7 +70,7 @@ const anime = defineCollection({
 });
 
 const animeSeasons = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/animeSeasons', pattern: '**/*.json' }),
   schema: z.object({
     tv: z.number(),
     se: z.number(),
@@ -78,7 +79,7 @@ const animeSeasons = defineCollection({
 });
 
 const animeEpisodes = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/animeEpisodes', pattern: '**/*.json' }),
   schema: z.object({
     ep: z.number(),
     tv: z.number(),

@@ -101,20 +101,20 @@ content:
       - { name: draft, type: boolean, default: false, label: "حالة النشر" }
 
   # ==================== Anime Seasons ====================
-  - name: "anime_seasons"
+  - name: "animeSeasons"
     label: "مواسم الانمي"
     type: collection
-    path: "src/content/anime/seasons"
+    path: "src/content/animeSeasons"
     fields:
       - { name: tv, type: number, label: "رقم الأنمي" }
       - { name: se, type: number, label: "رقم الموسم" }
       - { name: draft, type: boolean, default: false, label: "حالة النشر" }
 
   # ==================== Anime Episodes ====================
-  - name: "anime_episodes"
+  - name: "animeEpisodes"
     label: "حلقات الانمي"
     type: collection
-    path: "src/content/anime/episodes"
+    path: "src/content/animeEpisodes"
     fields:
       - { name: ep, type: number, label: "رقم الحلقة" }
       - { name: tv, type: number, label: "رقم الأنمي" }
@@ -123,6 +123,7 @@ content:
       - { name: duration, type: string, label: "المدة" }
       - { name: draft, type: boolean, default: false, label: "حالة النشر" }
       - name: video
+        label: "الفيديو"
         type: object
         fields:
           - { name: source_type, type: select, label: "نوع المصدر", options: { values: [ { value: "mp4", label: "MP4" }, { value: "embed", label: "Embed" } ] } }
