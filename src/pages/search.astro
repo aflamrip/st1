@@ -1,29 +1,69 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import MovieCard from '../components/MovieCard.astro';
-import ShowCard from '../components/ShowCard.astro';
+import { getCollection } from 'astro:content';
+
+const movies = (await getCollection('movies')).filter(m => !m.data.draft);
+const shows = (await getCollection('shows')).filter(s => !s.data.draft);
+const anime = (await getCollection('anime')).filter(a => !a.data.draft);
+
+const searchData = [
+  ...movies.map(m => ({
+    type: 'movie',
+    id: m.data.id,
+    title: m.data.title,
+    year: m.data.year,
+    thumbnail: m.data.thumbnail,
+    description: m.data.description,
+    tags: m.data.tags
+  })),
+  ...shows.map(s => ({
+    type: 'show',
+    tv: s.data.tv,
+    title: s.data.title,
+    year: s.data.year,
+    thumbnail: s.data.thumbnail,
+    description: s.data.description,
+    tags: s.data.tags
+  })),
+  ...anime.map(a => ({
+    type: 'anime',
+    tv: a.data.tv,
+    title: a.data.title,
+    year: a.data.year,
+    thumbnail: a.data.thumbnail,
+    description: a.data.description,
+    tags: a.data.tags
+  }))
+];
 ---
 
 <Layout title="بحث - Stream">
   <div class="container-custom py-12">
-    <h1 class="text-3xl md:text-4xl font-bold mb-8">البحث</h1>
+    <h1 class="text-3xl md:text-4xl font-bold mb-8 text-white">البحث</h1>
 
     <div class="mb-8">
-      <input
-        type="text"
-        id="search-input"
-        placeholder="ابحث عن أفلام، مسلسلات، أو أنمي..."
-        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
-        autocomplete="off"
-      />
+      <div class="relative">
+        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 i-carbon-search text-xl"></span>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="ابحث عن أفلام، مسلسلات، أو أنمي..."
+          class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          autocomplete="off"
+        />
+      </div>
     </div>
 
     <div id="search-results" class="mt-8">
-      <p class="text-gray-500 text-center py-12">
+      <p class="text-gray-400 text-center py-12">
         ابدأ الكتابة للبحث...
       </p>
     </div>
   </div>
+
+  <script define:vars={{ searchData }}>
+    window.__SEARCH_DATA__ = searchData;
+  </script>
 </Layout>
 
 <script>
@@ -37,37 +77,19 @@ import ShowCard from '../components/ShowCard.astro';
     year: number;
     thumbnail: string;
     description: string;
+    tags: string;
   }
 
   let fuse: Fuse<SearchItem>;
-  let searchData: SearchItem[] = [];
 
-  async function initSearch() {
-    try {
-      const [moviesRes, showsRes, animeRes] = await Promise.all([
-        fetch('/api/movies.json'),
-        fetch('/api/shows.json'),
-        fetch('/api/anime.json'),
-      ]);
+  function initSearch() {
+    const searchData = (window as any).__SEARCH_DATA__ as SearchItem[];
 
-      const movies = await moviesRes.json().catch(() => []);
-      const shows = await showsRes.json().catch(() => []);
-      const anime = await animeRes.json().catch(() => []);
-
-      searchData = [
-        ...movies.map((m: any) => ({ ...m, type: 'movie' as const })),
-        ...shows.map((s: any) => ({ ...s, type: 'show' as const })),
-        ...anime.map((a: any) => ({ ...a, type: 'anime' as const })),
-      ];
-
-      fuse = new Fuse(searchData, {
-        keys: ['title', 'description', 'tags'],
-        threshold: 0.3,
-        includeScore: true,
-      });
-    } catch (error) {
-      console.error('Failed to initialize search:', error);
-    }
+    fuse = new Fuse(searchData, {
+      keys: ['title', 'description', 'tags'],
+      threshold: 0.3,
+      includeScore: true,
+    });
   }
 
   function renderResults(results: Fuse.FuseResult<SearchItem>[]) {
@@ -75,7 +97,7 @@ import ShowCard from '../components/ShowCard.astro';
     if (!container) return;
 
     if (results.length === 0) {
-      container.innerHTML = '<p class="text-gray-500 text-center py-12">لا توجد نتائج</p>';
+      container.innerHTML = '<p class="text-gray-400 text-center py-12">لا توجد نتائج</p>';
       return;
     }
 
@@ -86,17 +108,17 @@ import ShowCard from '../components/ShowCard.astro';
     let html = '';
 
     if (movieResults.length > 0) {
-      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6">أفلام</h2><div class="grid-responsive">';
+      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6 text-white">أفلام</h2><div class="grid-responsive">';
       movieResults.forEach(result => {
         const item = result.item;
         html += `
           <a href="/movies/${item.id}" class="card group">
-            <div class="relative overflow-hidden">
-              <img src="${item.thumbnail}" alt="${item.title}" class="card-poster group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+            <div class="relative overflow-hidden rounded-lg">
+              <img src="${item.thumbnail}" alt="${item.title}" class="w-full h-[200px] object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" width="180" height="200" />
             </div>
-            <div class="p-3">
-              <h3 class="font-semibold text-sm mb-1">${item.title}</h3>
-              <p class="text-xs text-gray-500">${item.year}</p>
+            <div class="p-3 bg-gray-800">
+              <h3 class="font-semibold text-sm mb-1 text-gray-100">${item.title}</h3>
+              <p class="text-xs text-gray-400">${item.year}</p>
             </div>
           </a>
         `;
@@ -105,17 +127,17 @@ import ShowCard from '../components/ShowCard.astro';
     }
 
     if (showResults.length > 0) {
-      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6">مسلسلات</h2><div class="grid-responsive">';
+      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6 text-white">مسلسلات</h2><div class="grid-responsive">';
       showResults.forEach(result => {
         const item = result.item;
         html += `
           <a href="/shows/${item.tv}" class="card group">
-            <div class="relative overflow-hidden">
-              <img src="${item.thumbnail}" alt="${item.title}" class="card-poster group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+            <div class="relative overflow-hidden rounded-lg">
+              <img src="${item.thumbnail}" alt="${item.title}" class="w-full h-[200px] object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" width="180" height="200" />
             </div>
-            <div class="p-3">
-              <h3 class="font-semibold text-sm mb-1">${item.title}</h3>
-              <p class="text-xs text-gray-500">${item.year}</p>
+            <div class="p-3 bg-gray-800">
+              <h3 class="font-semibold text-sm mb-1 text-gray-100">${item.title}</h3>
+              <p class="text-xs text-gray-400">${item.year}</p>
             </div>
           </a>
         `;
@@ -124,17 +146,17 @@ import ShowCard from '../components/ShowCard.astro';
     }
 
     if (animeResults.length > 0) {
-      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6">أنمي</h2><div class="grid-responsive">';
+      html += '<div class="mb-12"><h2 class="text-2xl font-bold mb-6 text-white">أنمي</h2><div class="grid-responsive">';
       animeResults.forEach(result => {
         const item = result.item;
         html += `
           <a href="/anime/${item.tv}" class="card group">
-            <div class="relative overflow-hidden">
-              <img src="${item.thumbnail}" alt="${item.title}" class="card-poster group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+            <div class="relative overflow-hidden rounded-lg">
+              <img src="${item.thumbnail}" alt="${item.title}" class="w-full h-[200px] object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" width="180" height="200" />
             </div>
-            <div class="p-3">
-              <h3 class="font-semibold text-sm mb-1">${item.title}</h3>
-              <p class="text-xs text-gray-500">${item.year}</p>
+            <div class="p-3 bg-gray-800">
+              <h3 class="font-semibold text-sm mb-1 text-gray-100">${item.title}</h3>
+              <p class="text-xs text-gray-400">${item.year}</p>
             </div>
           </a>
         `;
@@ -156,7 +178,7 @@ import ShowCard from '../components/ShowCard.astro';
         if (!query) {
           const container = document.getElementById('search-results');
           if (container) {
-            container.innerHTML = '<p class="text-gray-500 text-center py-12">ابدأ الكتابة للبحث...</p>';
+            container.innerHTML = '<p class="text-gray-400 text-center py-12">ابدأ الكتابة للبحث...</p>';
           }
           return;
         }
