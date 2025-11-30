@@ -1,3 +1,8 @@
+# ==========================================================
+# ملف .pages.yml - نسخة مُعدَّلة وموحدة
+# ==========================================================
+
+# 🖼️ إعدادات الوسائط (Media)
 media:
   - name: "uploads"
     label: "Media"
@@ -9,123 +14,213 @@ media:
       - "jpeg"
       - "mp4"
 
+# 🎬 تجميعات المحتوى (Content Collections)
 content:
 
-  # ==================== Movies ====================
+  # ==================== الأفلام (Movies) ====================
+  # تم تعديل أسماء الحقول لتتوافق مع الهيكل المطلوب
   - name: "movies"
-    label: "افلام"
+    label: "الأفلام (Movies)"
+    path: "src/content/movies"
     filename: '{fields.title}.json'
     type: collection
-    path: "src/content/movies"
+    view:
+      fields: [poster, title, releaseYear, rating]
     fields:
-      - { name: id, label: "رقم الفيلم", type: number }
-      - { name: title, label: "اسم الفيلم", type: string }
-      - { name: year, label: "سنة الإنتاج", type: number }
-      - { name: thumbnail, label: "بوستر الفيلم", type: image }
-      - { name: description, label: "وصف الفيلم", type: text }
-      - { name: tags, label: "الكلمات الدلالية", type: string }
-      - { name: draft, label: "حالة النشر", type: boolean, default: false }
-      - name: video
-        label: "رابط الفيلم"
-        type: object
-        fields:
-          - name: source_type
-            label: "نوع المصدر"
-            type: select
-            options:
-              values:
-                - { value: "mp4", label: "MP4" }
-                - { value: "embed", label: "Embed" }
-          - { name: source, label: "الرابط", type: string }
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: poster                 # بوستر الفيلم
+        label: Poster Image
+        type: image
+      - name: thumbnail               # صورة مصغرة
+        label: Thumbnail
+        type: image
+      - name: releaseYear            # تم تغيير 'year' إلى 'releaseYear'
+        label: Release Year
+        type: number
+      - name: duration               # تم إضافة حقل المدة
+        label: Duration (minutes)
+        type: number
+      - name: rating                 # تم إضافة حقل التقييم
+        label: Rating
+        type: number
+      - name: genres                 # تم تغيير 'tags' القديمة إلى قائمة 'genres'
+        label: Genres
+        type: list
+        options:
+          items:
+            type: string
+      - name: tags                   # الكلمات الدلالية (Tags)
+        label: Tags
+        type: list
+        options:
+          items:
+            type: string
+      # دمج حقل 'video' القديم في حقلين 'videoUrl' و 'videoType'
+      - name: videoUrl
+        label: Video URL (MP4/HLS)
+        type: string
+      - name: videoType
+        label: Video Type
+        type: select
+        options:
+          options:
+            - mp4
+            - m3u8
+            - embed
+      - name: embedUrl               # رابط الـ Embed الخارجي
+        label: Embed URL
+        type: string
+      - name: featured               # تم إضافة Featured
+        label: Featured
+        type: boolean
+        default: false
+      - name: category               # تحديد نوع المحتوى
+        label: Category
+        type: select
+        options:
+          options:
+            - movie
+            - anime
 
-  # ==================== Shows ====================
-  - name: "shows"
-    label: "مسلسلات"
+  # ==================== المسلسلات/الأنمي (Series) ====================
+  # تم دمج 'Shows' و 'Anime' في هذه المجموعة الجديدة
+  - name: "series"
+    label: "المسلسلات والأنيمي (Series)"
+    path: "src/content/series"
+    filename: '{fields.title}.json'
     type: collection
-    path: "src/content/shows"
+    view:
+      fields: [poster, title, releaseYear, totalSeasons]
     fields:
-      - { name: tv, type: number, label: "رقم المسلسل" }
-      - { name: title, type: string, label: "اسم المسلسل" }
-      - { name: description, type: text, label: "الوصف" }
-      - { name: thumbnail, type: image, label: "البوستر" }
-      - { name: year, type: number, label: "سنة الإنتاج" }
-      - { name: tags, type: string, label: "الكلمات الدلالية" }
-      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: poster
+        label: Poster Image
+        type: image
+      - name: thumbnail
+        label: Thumbnail
+        type: image
+      - name: releaseYear
+        label: Release Year
+        type: number
+      - name: rating
+        label: Rating
+        type: number
+      - name: genres
+        label: Genres
+        type: list
+        options:
+          items:
+            type: string
+      - name: tags
+        label: Tags
+        type: list
+        options:
+          items:
+            type: string
+      - name: totalSeasons          # تم إضافة حقل المواسم الكلية
+        label: Total Seasons
+        type: number
+      - name: featured
+        label: Featured
+        type: boolean
+        default: false
+      - name: status                # حالة المسلسل (Ongoing/Completed)
+        label: Status
+        type: select
+        options:
+          options:
+            - ongoing
+            - completed
+      - name: category               # تحديد نوع المحتوى (Series / Anime)
+        label: Category
+        type: select
+        options:
+          options:
+            - series
+            - anime
 
-  # ==================== Seasons ====================
-  - name: "seasons"
-    label: "مواسم المسلسلات"
-    type: collection
-    path: "src/content/seasons"
-    fields:
-      - { name: tv, type: number, label: "رقم المسلسل" }
-      - { name: se, type: number, label: "رقم الموسم" }
-      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
-
-  # ==================== Episodes ====================
+  # ==================== الحلقات (Episodes) ====================
+  # تم دمج 'Seasons' و 'Episodes' و 'Anime Episodes' في مجموعة واحدة
   - name: "episodes"
-    label: "حلقات المسلسلات"
-    type: collection
+    label: "الحلقات (Episodes)"
     path: "src/content/episodes"
-    fields:
-      - { name: ep, type: number, label: "رقم الحلقة" }
-      - { name: tv, type: number, label: "رقم المسلسل" }
-      - { name: se, type: number, label: "رقم الموسم" }
-      - { name: title, type: string, label: "عنوان الحلقة" }
-      - { name: duration, type: string, label: "المدة" }
-      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
-      - name: video
-        label: "الفيديو"
-        type: object
-        fields:
-          - name: source_type
-            label: "نوع المصدر"
-            type: select
-            options:
-              values:
-                - { value: "mp4", label: "MP4" }
-                - { value: "embed", label: "Embed" }
-          - { name: source, type: string, label: "الرابط" }
-
-  # ==================== Anime ====================
-  - name: "anime"
-    label: "انمي"
+    # تغيير اسم الملف بناءً على المثال الجديد
+    filename: '{fields.seriesId}-s{fields.seasonNumber}e{fields.episodeNumber}.json' 
     type: collection
-    path: "src/content/anime"
+    view:
+      fields: [seriesId, seasonNumber, episodeNumber, title]
     fields:
-      - { name: tv, type: number, label: "رقم الأنمي" }
-      - { name: title, type: string, label: "اسم الأنمي" }
-      - { name: description, type: text, label: "الوصف" }
-      - { name: thumbnail, type: image, label: "البوستر" }
-      - { name: year, type: number, label: "سنة الإنتاج" }
-      - { name: tags, type: string, label: "الكلمات الدلالية" }
-      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
+      - name: seriesId               # رقم/معرف المسلسل (قد تحتاج لاستبداله بـ slug إذا كنت تدعم العلاقات)
+        label: Series ID
+        type: string
+      - name: seasonNumber           # رقم الموسم
+        label: Season Number
+        type: number
+      - name: episodeNumber          # رقم الحلقة
+        label: Episode Number
+        type: number
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: thumbnail
+        label: Thumbnail
+        type: image
+      - name: duration              # مدة الحلقة
+        label: Duration (minutes)
+        type: number
+      # دمج حقل 'video' القديم
+      - name: videoUrl
+        label: Video URL (MP4/HLS)
+        type: string
+      - name: videoType
+        label: Video Type
+        type: select
+        options:
+          options:
+            - mp4
+            - m3u8
+            - embed
+      - name: embedUrl
+        label: Embed URL
+        type: string
+      - name: releaseDate
+        label: Release Date
+        type: date
+        options:
+          format: yyyy-MM-dd
 
-  # ==================== Anime Seasons ====================
-  - name: "animeSeasons"
-    label: "مواسم الانمي"
-    type: collection
-    path: "src/content/animeSeasons"
+  # ==================== إعدادات الموقع (Site Settings) ====================
+  # تم نسخها كما هي
+  - name: site-settings
+    label: Site Settings
+    path: src/config/site.json
+    type: file
     fields:
-      - { name: tv, type: number, label: "رقم الأنمي" }
-      - { name: se, type: number, label: "رقم الموسم" }
-      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
-
-  # ==================== Anime Episodes ====================
-  - name: "animeEpisodes"
-    label: "حلقات الانمي"
-    type: collection
-    path: "src/content/animeEpisodes"
-    fields:
-      - { name: ep, type: number, label: "رقم الحلقة" }
-      - { name: tv, type: number, label: "رقم الأنمي" }
-      - { name: se, type: number, label: "رقم الموسم" }
-      - { name: title, type: string, label: "عنوان الحلقة" }
-      - { name: duration, type: string, label: "المدة" }
-      - { name: draft, type: boolean, default: false, label: "حالة النشر" }
-      - name: video
-        label: "الفيديو"
-        type: object
-        fields:
-          - { name: source_type, type: select, label: "نوع المصدر", options: { values: [ { value: "mp4", label: "MP4" }, { value: "embed", label: "Embed" } ] } }
-          - { name: source, type: string, label: "الرابط" }
+      - name: title
+        label: Website Title
+        type: string
+      - name: description
+        label: Website Description
+        type: string
+        description: Will be used for any page with no description.
+      - name: url
+        label: Website URL
+        type: string
+        pattern: ^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[^\s]*)?$
+      - name: cover
+        label: Preview Image
+        type: image
+        description: Image used in social preview on social networks
