@@ -33,6 +33,7 @@ const nextEpisode = currentIndex < seasonEpisodes.length - 1 ? seasonEpisodes[cu
 ---
 
 <Layout title={`${episode.data.title} - ${anime?.data.title || 'أنمي'} - Stream`}>
+  <link rel="preload" href="https://cdn.plyr.io/3.7.8/plyr.css" as="style" slot="head" />
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" slot="head" />
   <div class="container-custom py-12">
     <div class="mb-6">
