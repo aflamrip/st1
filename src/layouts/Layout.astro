@@ -84,15 +84,19 @@ const searchData = [
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.plyr.io">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://images.pexels.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
 
     <slot name="head" />
 
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="script" href="/_astro/embla-carousel.esm.CMPFBS9o.js" crossorigin />
 
     <style>
-      body{margin:0;background:#030712;color:#f3f4f6;font-family:system-ui,-apple-system,sans-serif}
+      body{margin:0;background:#030712;color:#f3f4f6}
       header{background:#111827;position:sticky;top:0;z-index:50;border-bottom:1px solid #1f2937}
       .container-custom{max-width:1280px;margin:0 auto;padding:0 1rem}
       .bg-gray-950{background:#030712}
@@ -101,6 +105,8 @@ const searchData = [
       .text-gray-100{color:#f3f4f6}
       .text-primary-500{color:#3b82f6}
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0" defer></script>
   </head>
   <body class="bg-gray-950 text-gray-100">
     <header class="bg-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-800">
@@ -199,22 +205,10 @@ const searchData = [
     <script>
       let fuse = null;
       let searchTimeout = null;
-      let fuseLoaded = false;
-
-      async function loadFuse() {
-        if (fuseLoaded) return;
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0';
-        script.onload = () => {
-          fuseLoaded = true;
-          initHeaderSearch();
-        };
-        document.head.appendChild(script);
-      }
 
       function initHeaderSearch() {
         const searchData = (window as any).__HEADER_SEARCH_DATA__;
-        if (!searchData || typeof (window as any).Fuse === 'undefined') return;
+        if (!searchData) return;
 
         fuse = new (window as any).Fuse(searchData, {
           keys: ['title', 'description', 'tags'],
@@ -332,22 +326,22 @@ const searchData = [
       }
 
       document.addEventListener('DOMContentLoaded', () => {
+        if (typeof (window as any).Fuse !== 'undefined') {
+          initHeaderSearch();
+        } else {
+          const checkFuse = setInterval(() => {
+            if (typeof (window as any).Fuse !== 'undefined') {
+              initHeaderSearch();
+              clearInterval(checkFuse);
+            }
+          }, 100);
+        }
+
         const headerSearch = document.getElementById('header-search') as HTMLInputElement;
         const dropdown = document.getElementById('search-dropdown');
 
         if (headerSearch && dropdown) {
-          let isFirstInteraction = true;
-
-          const loadFuseOnce = () => {
-            if (isFirstInteraction) {
-              loadFuse();
-              isFirstInteraction = false;
-            }
-          };
-
-          headerSearch.addEventListener('focus', loadFuseOnce);
           headerSearch.addEventListener('input', (e) => {
-            loadFuseOnce();
             const query = (e.target as HTMLInputElement).value.trim();
 
             clearTimeout(searchTimeout);
@@ -363,6 +357,14 @@ const searchData = [
                 renderDropdown(results);
               }
             }, 200);
+          });
+
+          headerSearch.addEventListener('focus', (e) => {
+            const query = (e.target as HTMLInputElement).value.trim();
+            if (query && fuse) {
+              const results = fuse.search(query);
+              renderDropdown(results);
+            }
           });
 
           document.addEventListener('click', (e) => {
