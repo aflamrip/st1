@@ -83,9 +83,10 @@ const searchData = [
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0" defer></script>
+    <slot name="head" />
   </head>
   <body class="bg-gray-950 text-gray-100">
     <header class="bg-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-800">
