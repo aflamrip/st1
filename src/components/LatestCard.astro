@@ -22,10 +22,12 @@ const { label, title, thumbnail, href, year, info, priority = false } = Astro.pr
       class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300"
       loading={priority ? 'eager' : 'lazy'}
       fetchpriority={priority ? 'high' : 'auto'}
-      width={440}
-      height={400}
+      width={240}
+      height={200}
+      widths={[160, 200, 240]}
+      sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 240px"
       format="webp"
-      quality={80}
+      quality={75}
     />
     <div class="absolute top-2 right-2">
       <span class="px-2 py-1 bg-primary-500 text-white text-xs font-semibold rounded-md">
