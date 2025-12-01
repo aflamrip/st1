@@ -93,6 +93,8 @@ const searchData = [
 
     <slot name="head" />
 
+    <link rel="preload" as="script" href="/_astro/embla-carousel.esm.CMPFBS9o.js" crossorigin />
+
     <style>
       body{margin:0;background:#030712;color:#f3f4f6}
       header{background:#111827;position:sticky;top:0;z-index:50;border-bottom:1px solid #1f2937}
@@ -195,9 +197,6 @@ const searchData = [
         color-scheme: dark;
       }
     </style>
-
-
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 
     <script define:vars={{ searchData }}>
       window.__HEADER_SEARCH_DATA__ = searchData;
