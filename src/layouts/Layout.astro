@@ -12,6 +12,8 @@ const { title, description = 'Watch movies, shows and anime', dir = 'rtl' } = As
 const movies = (await getCollection('movies')).filter(m => !m.data.draft);
 const shows = (await getCollection('shows')).filter(s => !s.data.draft);
 const anime = (await getCollection('anime')).filter(a => !a.data.draft);
+const episodes = (await getCollection('episodes')).filter(e => !e.data.draft);
+const animeEpisodes = (await getCollection('animeEpisodes')).filter(e => !e.data.draft);
 
 const searchData = [
   ...movies.map(m => ({
@@ -40,7 +42,33 @@ const searchData = [
     thumbnail: a.data.thumbnail,
     description: a.data.description,
     tags: a.data.tags
-  }))
+  })),
+  ...episodes.map(e => {
+    const show = shows.find(s => s.data.tv === e.data.tv);
+    return {
+      type: 'episode',
+      tv: e.data.tv,
+      se: e.data.se,
+      ep: e.data.ep,
+      title: `${show?.data.title || 'مسلسل'} - ${e.data.title}`,
+      thumbnail: show?.data.thumbnail,
+      description: show?.data.description,
+      tags: show?.data.tags
+    };
+  }),
+  ...animeEpisodes.map(e => {
+    const animeShow = anime.find(a => a.data.tv === e.data.tv);
+    return {
+      type: 'animeEpisode',
+      tv: e.data.tv,
+      se: e.data.se,
+      ep: e.data.ep,
+      title: `${animeShow?.data.title || 'أنمي'} - ${e.data.title}`,
+      thumbnail: animeShow?.data.thumbnail,
+      description: animeShow?.data.description,
+      tags: animeShow?.data.tags
+    };
+  })
 ];
 ---
 
@@ -193,8 +221,8 @@ const searchData = [
             const item = result.item;
             const url = `/movies/${item.id}`;
             html += `
-              <a href="${url}" class="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-lg transition-colors">
-                <img src="${item.thumbnail}" alt="${item.title}" class="w-12 h-16 object-cover rounded" />
+              <a href="${url}" class="flex items-center gap-2 p-2 hover:bg-gray-700 rounded-lg transition-colors">
+                <img src="${item.thumbnail}" alt="${item.title}" class="w-10 h-14 object-cover rounded" />
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-semibold text-white truncate">${item.title}</p>
                   <p class="text-xs text-gray-400">${item.year}</p>
@@ -205,14 +233,15 @@ const searchData = [
           html += '</div>';
         }
 
-        if (showResults.length > 0) {
+        const episodeResults = results.filter(r => r.item.type === 'episode').slice(0, 3);
+        if (showResults.length > 0 || episodeResults.length > 0) {
           html += '<div class="mb-2"><p class="text-xs font-semibold text-gray-400 px-2 py-1">مسلسلات</p>';
           showResults.forEach(result => {
             const item = result.item;
             const url = `/shows/${item.tv}`;
             html += `
-              <a href="${url}" class="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-lg transition-colors">
-                <img src="${item.thumbnail}" alt="${item.title}" class="w-12 h-16 object-cover rounded" />
+              <a href="${url}" class="flex items-center gap-2 p-2 hover:bg-gray-700 rounded-lg transition-colors">
+                <img src="${item.thumbnail}" alt="${item.title}" class="w-10 h-14 object-cover rounded" />
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-semibold text-white truncate">${item.title}</p>
                   <p class="text-xs text-gray-400">${item.year}</p>
@@ -220,20 +249,47 @@ const searchData = [
               </a>
             `;
           });
+          episodeResults.forEach(result => {
+            const item = result.item;
+            const url = `/shows/${item.tv}/${item.se}/${item.ep}`;
+            html += `
+              <a href="${url}" class="flex items-center gap-2 p-2 hover:bg-gray-700 rounded-lg transition-colors">
+                <img src="${item.thumbnail}" alt="${item.title}" class="w-10 h-14 object-cover rounded" />
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-white truncate">${item.title}</p>
+                  <p class="text-xs text-gray-400">الموسم ${item.se} - الحلقة ${item.ep}</p>
+                </div>
+              </a>
+            `;
+          });
           html += '</div>';
         }
 
-        if (animeResults.length > 0) {
+        const animeEpisodeResults = results.filter(r => r.item.type === 'animeEpisode').slice(0, 3);
+        if (animeResults.length > 0 || animeEpisodeResults.length > 0) {
           html += '<div class="mb-2"><p class="text-xs font-semibold text-gray-400 px-2 py-1">أنمي</p>';
           animeResults.forEach(result => {
             const item = result.item;
             const url = `/anime/${item.tv}`;
             html += `
-              <a href="${url}" class="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-lg transition-colors">
-                <img src="${item.thumbnail}" alt="${item.title}" class="w-12 h-16 object-cover rounded" />
+              <a href="${url}" class="flex items-center gap-2 p-2 hover:bg-gray-700 rounded-lg transition-colors">
+                <img src="${item.thumbnail}" alt="${item.title}" class="w-10 h-14 object-cover rounded" />
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-semibold text-white truncate">${item.title}</p>
                   <p class="text-xs text-gray-400">${item.year}</p>
+                </div>
+              </a>
+            `;
+          });
+          animeEpisodeResults.forEach(result => {
+            const item = result.item;
+            const url = `/anime/${item.tv}/${item.se}/${item.ep}`;
+            html += `
+              <a href="${url}" class="flex items-center gap-2 p-2 hover:bg-gray-700 rounded-lg transition-colors">
+                <img src="${item.thumbnail}" alt="${item.title}" class="w-10 h-14 object-cover rounded" />
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-white truncate">${item.title}</p>
+                  <p class="text-xs text-gray-400">الموسم ${item.se} - الحلقة ${item.ep}</p>
                 </div>
               </a>
             `;
