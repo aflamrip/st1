@@ -2,12 +2,11 @@
   "id": 1,
   "title": "The Great Adventure",
   "year": 2023,
-  "thumbnail": "https://images.pexels.com/photos/1200450/pexels-photo-1200450.jpeg?auto=compress&cs=tinysrgb&w=400",
   "description": "فيلم مغامرات مثير يأخذك في رحلة لا تُنسى عبر أراضٍ غامضة وعوالم مذهلة. قصة ملحمية عن الشجاعة والصداقة في مواجهة التحديات.",
   "tags": "مغامرات, أكشن, إثارة",
   "draft": false,
   "video": {
-    "source_type": "embed",
-    "source": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    "source_type": "mp4",
+    "source": "https://s001.mogcdn.com/hls/b4e599aa-c6b7-41cb-ab8a-9163f1ae616f/1c72107e-1d77-4d44-a264-04ac58414ee4-720.m3u8"
   }
 }
