@@ -8,9 +8,10 @@ interface Props {
   href: string;
   year?: number;
   info?: string;
+  priority?: boolean;
 }
 
-const { label, title, thumbnail, href, year, info } = Astro.props;
+const { label, title, thumbnail, href, year, info, priority = false } = Astro.props;
 ---
 
 <a href={href} class="latest-card group">
@@ -19,7 +20,8 @@ const { label, title, thumbnail, href, year, info } = Astro.props;
       src={thumbnail}
       alt={title}
       class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300"
-      loading="lazy"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
       width={440}
       height={400}
       format="webp"
