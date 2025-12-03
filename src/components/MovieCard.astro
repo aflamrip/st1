@@ -6,9 +6,10 @@ interface Props {
   title: string;
   year: number;
   thumbnail: string;
+  priority?: boolean;
 }
 
-const { id, title, year, thumbnail } = Astro.props;
+const { id, title, year, thumbnail, priority = false } = Astro.props;
 ---
 
 <a href={`/movies/${id}`} class="card group">
@@ -17,7 +18,8 @@ const { id, title, year, thumbnail } = Astro.props;
       src={thumbnail}
       alt={title}
       class="w-full h-[200px] object-cover group-hover:scale-110 transition-transform duration-300"
-      loading="lazy"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
       width={360}
       height={400}
       format="webp"

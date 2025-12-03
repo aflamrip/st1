@@ -7,9 +7,10 @@ interface Props {
   year: number;
   thumbnail: string;
   type?: 'show' | 'anime';
+  priority?: boolean;
 }
 
-const { tv, title, year, thumbnail, type = 'show' } = Astro.props;
+const { tv, title, year, thumbnail, type = 'show', priority = false } = Astro.props;
 const basePath = type === 'anime' ? '/anime' : '/shows';
 ---
 
@@ -19,7 +20,8 @@ const basePath = type === 'anime' ? '/anime' : '/shows';
       src={thumbnail}
       alt={title}
       class="w-full h-[200px] object-cover group-hover:scale-110 transition-transform duration-300"
-      loading="lazy"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
       width={360}
       height={400}
       format="webp"
