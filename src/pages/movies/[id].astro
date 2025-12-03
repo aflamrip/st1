@@ -5,6 +5,8 @@ import MovieCardSmall from '../../components/MovieCardSmall.astro';
 import EmblaSlider from '../../components/EmblaSlider.astro';
 import { getCollection } from 'astro:content';
 
+const needsPlyr = true;
+
 export async function getStaticPaths() {
   const movies = await getCollection('movies');
   return movies
@@ -23,6 +25,7 @@ const tags = movie.data.tags.split(',').map((t: string) => t.trim());
 ---
 
 <Layout title={`${movie.data.title} - Stream`} description={movie.data.description}>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" slot="head" />
   <div class="container-custom py-12">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2">
