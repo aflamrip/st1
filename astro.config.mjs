@@ -37,6 +37,17 @@ export default defineConfig({
   vite: {
     ssr: {
       noExternal: ['plyr']
+    },
+    build: {
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'embla': ['embla-carousel'],
+            'fuse': ['fuse.js']
+          }
+        }
+      }
     }
   },
   image: {
@@ -48,7 +59,10 @@ export default defineConfig({
       }
     ],
     service: {
-      entrypoint: 'astro/assets/services/sharp'
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        limitInputPixels: false
+      }
     }
   }
 });

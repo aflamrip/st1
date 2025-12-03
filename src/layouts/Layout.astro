@@ -81,12 +81,32 @@ const searchData = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.plyr.io">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://images.pexels.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0" defer></script>
+
     <slot name="head" />
+
+    <link rel="preload" as="script" href="/_astro/embla-carousel.esm.CMPFBS9o.js" crossorigin />
+
+    <style>
+      body{margin:0;background:#030712;color:#f3f4f6}
+      header{background:#111827;position:sticky;top:0;z-index:50;border-bottom:1px solid #1f2937}
+      .container-custom{max-width:1280px;margin:0 auto;padding:0 1rem}
+      .bg-gray-950{background:#030712}
+      .bg-gray-900{background:#111827}
+      .bg-gray-800{background:#1f2937}
+      .text-gray-100{color:#f3f4f6}
+      .text-primary-500{color:#3b82f6}
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0" defer></script>
   </head>
   <body class="bg-gray-950 text-gray-100">
     <header class="bg-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-800">
@@ -177,9 +197,6 @@ const searchData = [
         color-scheme: dark;
       }
     </style>
-
-
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 
     <script define:vars={{ searchData }}>
       window.__HEADER_SEARCH_DATA__ = searchData;
