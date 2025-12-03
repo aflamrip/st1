@@ -1,25 +1,33 @@
 ---
+import { Image } from 'astro:assets';
+
 interface Props {
   tv: number;
   title: string;
   year: number;
   thumbnail: string;
   type?: 'show' | 'anime';
+  priority?: boolean;
 }
 
-const { tv, title, year, thumbnail, type = 'show' } = Astro.props;
+const { tv, title, year, thumbnail, type = 'show', priority = false } = Astro.props;
 const basePath = type === 'anime' ? '/anime' : '/shows';
 ---
 
 <a href={`${basePath}/${tv}`} class="card group">
   <div class="relative overflow-hidden rounded-lg">
-    <img
+    <Image
       src={thumbnail}
       alt={title}
       class="w-full h-[200px] object-cover group-hover:scale-110 transition-transform duration-300"
-      loading="lazy"
-      width="180"
-      height="200"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      width={220}
+      height={200}
+      widths={[200, 220, 240]}
+      sizes="(max-width: 640px) 200px, 220px"
+      format="webp"
+      quality={70}
     />
     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity">
       <div class="absolute bottom-0 left-0 right-0 p-4">

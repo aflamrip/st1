@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 interface Props {
   label: string;
   title: string;
@@ -6,20 +8,26 @@ interface Props {
   href: string;
   year?: number;
   info?: string;
+  priority?: boolean;
 }
 
-const { label, title, thumbnail, href, year, info } = Astro.props;
+const { label, title, thumbnail, href, year, info, priority = false } = Astro.props;
 ---
 
 <a href={href} class="latest-card group">
   <div class="relative overflow-hidden rounded-xl bg-gray-800">
-    <img
+    <Image
       src={thumbnail}
       alt={title}
       class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300"
-      loading="lazy"
-      width="250"
-      height="200"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      width={240}
+      height={200}
+      widths={[160, 200, 240]}
+      sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 240px"
+      format="webp"
+      quality={75}
     />
     <div class="absolute top-2 right-2">
       <span class="px-2 py-1 bg-primary-500 text-white text-xs font-semibold rounded-md">

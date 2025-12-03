@@ -37,10 +37,32 @@ export default defineConfig({
   vite: {
     ssr: {
       noExternal: ['plyr']
+    },
+    build: {
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'embla': ['embla-carousel'],
+            'fuse': ['fuse.js']
+          }
+        }
+      }
     }
   },
   image: {
-    domains: [],
-    remotePatterns: []
+    domains: ['images.pexels.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com'
+      }
+    ],
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        limitInputPixels: false
+      }
+    }
   }
 });

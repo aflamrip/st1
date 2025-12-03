@@ -33,8 +33,8 @@ const { source, sourceType, title } = Astro.props;
 
 {sourceType === 'mp4' && (
   <script>
-    if (typeof window !== 'undefined' && window.Plyr) {
-      document.addEventListener('DOMContentLoaded', () => {
+    function initPlyr() {
+      if (typeof window.Plyr !== 'undefined') {
         const player = new window.Plyr('#player', {
           controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'fullscreen'],
           i18n: {
@@ -47,7 +47,13 @@ const { source, sourceType, title } = Astro.props;
             exitFullscreen: 'خروج من ملء الشاشة',
           }
         });
-      });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPlyr);
+    } else {
+      initPlyr();
     }
   </script>
 )}
