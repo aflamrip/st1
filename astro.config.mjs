@@ -40,7 +40,15 @@ export default defineConfig({
     }
   },
   image: {
-    domains: [],
-    remotePatterns: []
+    domains: ['images.pexels.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com'
+      }
+    ],
+    service: {
+      entrypoint: 'astro/assets/services/sharp'
+    }
   }
 });
