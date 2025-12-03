@@ -2,11 +2,11 @@
   "ep": 1,
   "tv": 1,
   "se": 1,
-  "title": "ورد وشوكولاتة",
+  "title": "البداية",
   "duration": "45 دقيقة",
   "draft": false,
   "video": {
-    "source_type": "mp4",
-    "source": "https://vid5.zvde-dsn-05.site/Ward-w-Shokolata/01.mp4"
+    "source_type": "embed",
+    "source": "https://www.youtube.com/embed/dQw4w9WgXcQ"
   }
 }

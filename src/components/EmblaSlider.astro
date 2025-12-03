@@ -53,27 +53,19 @@ const sliderId = `embla-${Math.random().toString(36).substr(2, 9)}`;
 <script>
   import EmblaCarousel from 'embla-carousel';
 
-  function initEmblaSliders() {
-    requestAnimationFrame(() => {
-      const emblaNodes = document.querySelectorAll('.embla-slider[data-embla-id]');
+  document.addEventListener('DOMContentLoaded', () => {
+    const emblaNodes = document.querySelectorAll('.embla-slider[data-embla-id]');
 
-      emblaNodes.forEach(emblaNode => {
-        const viewport = emblaNode.querySelector('.embla__viewport') as HTMLElement;
-        if (!viewport) return;
+    emblaNodes.forEach(emblaNode => {
+      const viewport = emblaNode.querySelector('.embla__viewport') as HTMLElement;
+      if (!viewport) return;
 
-        EmblaCarousel(viewport, {
-          align: 'start',
-          dragFree: true,
-          containScroll: 'trimSnaps',
-          direction: 'rtl'
-        });
+      EmblaCarousel(viewport, {
+        align: 'start',
+        dragFree: true,
+        containScroll: 'trimSnaps',
+        direction: 'rtl'
       });
     });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEmblaSliders);
-  } else {
-    initEmblaSliders();
-  }
+  });
 </script>
