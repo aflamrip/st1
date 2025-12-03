@@ -2,11 +2,11 @@
   "ep": 2,
   "tv": 1,
   "se": 1,
-  "title": "ورد وشوكولاتة",
+  "title": "الأدلة الأولى",
   "duration": "42 دقيقة",
   "draft": false,
   "video": {
-    "source_type": "mp4",
-    "source": "https://vid4.zvde-dsn-05.site/Ward-w-Shokolata/02.mp4"
+    "source_type": "embed",
+    "source": "https://www.youtube.com/embed/dQw4w9WgXcQ"
   }
 }
