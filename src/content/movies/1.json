@@ -1,13 +1,13 @@
 {
   "id": 1,
-  "title": "The Great Adventure",
+  "title": "تيتو",
   "year": 2023,
-  "thumbnail": "https://images.pexels.com/photos/1200450/pexels-photo-1200450.jpeg?auto=compress&cs=tinysrgb&w=400",
+  "thumbnail": "/uploads/Teto_Poster.jpeg",
   "description": "فيلم مغامرات مثير يأخذك في رحلة لا تُنسى عبر أراضٍ غامضة وعوالم مذهلة. قصة ملحمية عن الشجاعة والصداقة في مواجهة التحديات.",
   "tags": "مغامرات, أكشن, إثارة",
   "draft": false,
   "video": {
-    "source_type": "embed",
-    "source": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    "source_type": "mp4",
+    "source": "https://m90.uqload.cx/3rfkt3nm6bw2q4drdkzptlffaiwtqga66vruoa5ou2kxpdr7i55meguwlzwa/v.mp4"
   }
 }
